@@ -13,7 +13,7 @@ defmodule ExRated.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [applications: [:logger],
-     mod: {ExRated, []}]
+     mod: {ExRated.App, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -26,6 +26,6 @@ defmodule ExRated.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    []
+    [{:ex2ms, "~> 1.1.0"}]
   end
 end
