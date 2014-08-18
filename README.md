@@ -2,8 +2,8 @@
 
 ExRated is:
 
-1. A port of the Erlang '[ratelimiter](https://github.com/Gromina/raterlimiter)' project to Elixir.
-2. An OTP GenServer process that allows you to rate limit calls to anything, for example an external API.
+1. A port of the Erlang '[raterlimiter](https://github.com/Gromina/raterlimiter)' project to Elixir.
+2. An OTP GenServer process that allows you to rate limit calls to something like an external API.
 3. The Hex.pm package with the naughty name.
 
 You can learn more about the concept for this rate limiter in [ the Token Bucket article on Wikipedia](http://en.wikipedia.org/wiki/Token_bucket)
