@@ -8,7 +8,7 @@ defmodule ExRated do
 
       http://en.wikipedia.org/wiki/Token_bucket
 
-    This application is a direct port of the Erlang 'ratelimiter' project
+    This application is a direct port of the Erlang 'raterlimiter' project
     created by Alexander Sorokin (https://github.com/Gromina/raterlimiter,
     gromina@gmail.com, http://alexsorokin.ru) and the primary credit for
     the functionality goes to him. This has been implemented in Elixir
