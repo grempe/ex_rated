@@ -50,7 +50,7 @@ You can use ExRated in your projects in two steps:
 
 It is important that the OTP doesn't get automatically started by Mix.
 
-    ```elixir
+    ```
     mix test --no-start
     ```
 
@@ -58,7 +58,7 @@ It is important that the OTP doesn't get automatically started by Mix.
 
 On my old Macbook Pro I can do 65,000 checks in about 1.6 seconds.
 
-    ```elixir
+    ```
     iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000000, 10_000_000) end
     *** #Function<20.90072148/0 in :erl_eval.expr/5> ***
     1.6 sec    65K iterations   25.42 μs/op
