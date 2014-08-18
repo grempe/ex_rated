@@ -5,6 +5,8 @@ defmodule ExRated.Mixfile do
     [app: :ex_rated,
      version: "0.0.1",
      elixir: "~> 0.15.1",
+     description: description,
+     package: package,
      deps: deps]
   end
 
@@ -33,4 +35,24 @@ defmodule ExRated.Mixfile do
   defp deps do
     [{:ex2ms, "~> 1.2.0"}]
   end
+
+  defp description do
+    """
+    ExRated, the OTP GenServer with the naughty name that allows you to rate-limit calls
+    to any service that requires it.
+
+    For example, rate-limit calls to your favorite API which requires no more
+    than `limit` API calls within a `scale` milliseconds time window. You can enforce
+    limits for windows as narrow as milliseconds, or as broad as 25 hours.
+    """
+  end
+
+  defp package do
+    [# These are the default files included in the package
+     files: ["lib", "priv", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
+     contributors: ["Glenn Rempe"],
+     licenses: ["Apache 2.0"],
+     links: %{"GitHub" => "https://github.com/grempe/ex_rated"}]
+  end
+
 end
