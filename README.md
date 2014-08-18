@@ -4,11 +4,27 @@ ExRated is:
 
 1. A port of the Erlang '[ratelimiter](https://github.com/Gromina/raterlimiter)' project to Elixir.
 2. An OTP GenServer process that allows you to rate limit calls to anything, for example an external API.
+3. The Hex.pm package with the naughty name.
+
+You can learn more about the concept for this rate limiter in [ the Token Bucket article on Wikipedia](http://en.wikipedia.org/wiki/Token_bucket)
 
 
 ## Usage
 
-Needs writing.
+Call the ExRated application with `ExRated.check_rate()`.  This function takes three arguments:
+
+1. A `bucket name` (String).  You can have as many buckets as you need.
+2. A `scale` (Integer) which represents the time scale in milliseconds that the bucket is valid for.
+3. A `limit` which represents how many actions you want to limit your app to in the time scale provided.
+
+For example, if you have to enforce a rate limit of no more than 10 calls in 10 seconds to your API:
+
+	````elixir
+	iex> ExRated.check_rate("my-rate-limited-api", 10_000, 10)
+	{:ok, 1}
+	````
+
+The `ExRated.check_rate` function will return an `{:ok, Integer}` tuple if its OK to proceed with your rate limited function where the Integer returned is the current incrementing counter of how many times within the time scale your function has already been called.  If you are over limit a `{:fail, Integer}` tuple will be returned where the Integer is the limit you have specified.
 
 ## Installation
 
@@ -29,6 +45,14 @@ You can use ExRated in your projects in two steps:
       [applications: [:ex_rated]]
     end
     ```
+
+## Testing
+
+It is important that the OTP doesn't get automatically started by Mix.
+
+    ````elixir
+    mix test --no-start
+    ````
 
 ## Is it fast?
 
