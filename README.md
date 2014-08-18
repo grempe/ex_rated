@@ -54,7 +54,7 @@ You can also start the GenServer manually, and pass it custom config, with somet
 
 Where the args and their defaults are:
 
-`{:timeout, 90_000_000}` : buckets that are older than this many milliseconds will be automatically pruned.
+`{:timeout, 90_000_000}` : buckets older than this in milliseconds will be automatically pruned.
 
 `{:cleanup_rate, 60_000}` : how often, in milliseconds, the bucket pruning process will be run.
 
