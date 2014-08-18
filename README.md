@@ -19,10 +19,10 @@ Call the ExRated application with `ExRated.check_rate()`.  This function takes t
 
 For example, if you have to enforce a rate limit of no more than 10 calls in 10 seconds to your API:
 
-	```elixir
-	iex> ExRated.check_rate("my-rate-limited-api", 10_000, 10)
-	{:ok, 1}
-	```
+```elixir
+iex> ExRated.check_rate("my-rate-limited-api", 10_000, 10)
+{:ok, 1}
+```
 
 The `ExRated.check_rate` function will return an `{:ok, Integer}` tuple if its OK to proceed with your rate limited function where the Integer returned is the current incrementing counter of how many times within the time scale your function has already been called.  If you are over limit a `{:fail, Integer}` tuple will be returned where the Integer is the limit you have specified.
 
@@ -50,19 +50,19 @@ You can use ExRated in your projects in two steps:
 
 It is important that the OTP doesn't get automatically started by Mix.
 
-    ```
-    mix test --no-start
-    ```
+```elixir
+mix test --no-start
+```
 
 ## Is it fast?
 
 On my old Macbook Pro I can do 65,000 checks in about 1.6 seconds.
 
-    ```
-    iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000000, 10_000_000) end
-    *** #Function<20.90072148/0 in :erl_eval.expr/5> ***
-    1.6 sec    65K iterations   25.42 μs/op
-    ```
+```elixir
+iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000000, 10_000_000) end
+*** #Function<20.90072148/0 in :erl_eval.expr/5> ***
+1.6 sec    65K iterations   25.42 μs/op
+```
 
 ## License
 
