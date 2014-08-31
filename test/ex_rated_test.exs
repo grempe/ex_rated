@@ -12,7 +12,7 @@ defmodule ExRatedServerTest do
     assert {:ok, 1} = ExRated.check_rate("my-bucket", 10_000, 10)
   end
 
-  test "returns {:ok, 4} tuple on five in-limit checks" do
+  test "returns {:ok, 4} tuple on in-limit checks" do
     assert {:ok, 1} = ExRated.check_rate("my-bucket", 10_000, 10)
     assert {:ok, 2} = ExRated.check_rate("my-bucket", 10_000, 10)
     assert {:ok, 3} = ExRated.check_rate("my-bucket", 10_000, 10)
