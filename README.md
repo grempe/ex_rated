@@ -73,12 +73,23 @@ mix test --no-start
 
 ## Is it fast?
 
-On my old Macbook Pro I can do 65,000 checks in about 1.6 seconds.
+On my 2014 Macbook Pro I can do 262,000 checks in about 1.2 seconds.
 
 ```elixir
 iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000000, 10_000_000) end
 *** #Function<20.90072148/0 in :erl_eval.expr/5> ***
-1.6 sec    65K iterations   25.42 μs/op
+1.2 sec   262K iterations   4.9 μs/op
+```
+
+To try this test yourself just add Benchwarmer to your dependencies in `mix.exs`:
+
+```
+defp deps do
+  [
+    {:ex2ms, "~> 1.3.0"},
+    {:benchwarmer, "~> 0.0.2"}
+  ]
+end
 ```
 
 ## License
