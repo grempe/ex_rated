@@ -143,8 +143,12 @@ defmodule ExRated do
   end
 
   # Returns Erlang Time as milliseconds since 00:00 GMT, January 1, 1970
-  defp timestamp() do
-    timestamp(:erlang.now())
+  defp timestamp()
+  case ExRated.Utils.get_otp_release() do
+    ver when ver >= 18 ->
+      defp timestamp(), do: :erlang.system_time(:milli_seconds)
+    _ ->
+      defp timestamp(), do: timestamp(:erlang.now())
   end
 
   defp timestamp({mega, sec, micro}) do
