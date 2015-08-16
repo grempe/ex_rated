@@ -73,15 +73,9 @@ mix test --no-start
 
 ## Is it fast?
 
-On my 2014 Macbook Pro I can do 262,000 checks in about 1.2 seconds.
+You can use the `Benchwarmer` library to do a quick performance test.
 
-```elixir
-iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000000, 10_000_000) end
-*** #Function<20.90072148/0 in :erl_eval.expr/5> ***
-1.2 sec   262K iterations   4.9 μs/op
-```
-
-To try this test yourself just add Benchwarmer to your dependencies in `mix.exs`:
+Temporarily add `Benchwarmer` to your dependencies in `mix.exs` as shown below and run `mix deps.get` and `iex -S mix`:
 
 ```
 defp deps do
@@ -91,6 +85,20 @@ defp deps do
   ]
 end
 ```
+
+On my 2014 Macbook Pro I can do 262,000 checks in about 1.2 seconds.
+
+```elixir
+iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000000, 10_000_000) end
+*** #Function<20.90072148/0 in :erl_eval.expr/5> ***
+1.2 sec   262K iterations   4.9 μs/op
+```
+
+## Changes
+
+** 0.0.6 **
+
+  - ExRated internally calls `:erlang.system_time(:milli_seconds)` provided by the new [Time API in OTP 18](http://www.erlang.org/doc/apps/erts/time_correction.html) and greater if available, and will fall back gracefully to the old `:erlang.now()` in older versions. Thanks to Mitchell Henke (mitchellhenke) for the enhancement.
 
 ## License
 
