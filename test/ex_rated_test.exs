@@ -3,7 +3,7 @@ defmodule ExRatedServerTest do
 
   setup do
     {:ok, pid} = GenServer.start_link(ExRated, [ {:timeout, 10_000}, {:cleanup_rate,10_000}, {:ets_table_name, :ex_rated_buckets_test} ], [name: :ex_rated])
-    {:ok, exrate_server: pid}
+    {:ok, exrated_server: pid}
   end
 
   doctest ExRated
