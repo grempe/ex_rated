@@ -96,7 +96,7 @@ iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000
 
 ## Changes
 
-** 0.0.6 **
+### v0.0.6
 
   - ExRated internally calls `:erlang.system_time(:milli_seconds)` provided by the new [Time API in OTP 18](http://www.erlang.org/doc/apps/erts/time_correction.html) and greater if available, and will fall back gracefully to the old `:erlang.now()` in older versions. Thanks to Mitchell Henke (mitchellhenke) for the enhancement.
 
