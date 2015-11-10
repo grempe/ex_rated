@@ -22,18 +22,18 @@ defmodule ExRatedServerTest do
   test "returns expected tuples on mix of in-limit and out-of-limit checks" do
     assert {:ok, 1} = ExRated.check_rate("my-bucket", 10_000, 2)
     assert {:ok, 2} = ExRated.check_rate("my-bucket", 10_000, 2)
-    assert {:fail, 2} = ExRated.check_rate("my-bucket", 10_000, 2)
-    assert {:fail, 2} = ExRated.check_rate("my-bucket", 10_000, 2)
+    assert {:error, 2} = ExRated.check_rate("my-bucket", 10_000, 2)
+    assert {:error, 2} = ExRated.check_rate("my-bucket", 10_000, 2)
   end
 
   test "returns expected tuples on 1000ms bucket check with a sleep in the middle" do
     assert {:ok, 1} = ExRated.check_rate("my-bucket", 1000, 2)
     assert {:ok, 2} = ExRated.check_rate("my-bucket", 1000, 2)
-    assert {:fail, 2} = ExRated.check_rate("my-bucket", 1000, 2)
+    assert {:error, 2} = ExRated.check_rate("my-bucket", 1000, 2)
     :timer.sleep 1000
     assert {:ok, 1} = ExRated.check_rate("my-bucket", 1000, 2)
     assert {:ok, 2} = ExRated.check_rate("my-bucket", 1000, 2)
-    assert {:fail, 2} = ExRated.check_rate("my-bucket", 1000, 2)
+    assert {:error, 2} = ExRated.check_rate("my-bucket", 1000, 2)
   end
 
 end

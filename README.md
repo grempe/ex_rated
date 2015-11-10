@@ -24,7 +24,7 @@ iex> ExRated.check_rate("my-rate-limited-api", 10_000, 5)
 {:ok, 1}
 ```
 
-The `ExRated.check_rate` function will return an `{:ok, Integer}` tuple if its OK to proceed with your rate limited function. The Integer returned is the current value of the incrementing counter showing how many times in the time scale window your function has already been called. If you are over limit a `{:fail, Integer}` tuple will be returned where the Integer is always the limit you have specified in the function call.
+The `ExRated.check_rate` function will return an `{:ok, Integer}` tuple if its OK to proceed with your rate limited function. The Integer returned is the current value of the incrementing counter showing how many times in the time scale window your function has already been called. If you are over limit a `{:error, Integer}` tuple will be returned where the Integer is always the limit you have specified in the function call.
 
 ## Installation
 

@@ -45,7 +45,7 @@ defmodule ExRated do
       {:ok, 1}
 
   """
-  @spec check_rate(id::String.t, scale::integer, limit::integer) :: {:ok, count::integer} | {:fail, limit::integer}
+  @spec check_rate(id::String.t, scale::integer, limit::integer) :: {:ok, count::integer} | {:error, limit::integer}
   def check_rate(id, scale, limit) do
     GenServer.call(:ex_rated, {id, scale, limit})
   end
@@ -124,7 +124,7 @@ defmodule ExRated do
         [counter, _, _] = :ets.update_counter(ets_table_name, key, [{2,1},{3,0},{4,1,0, stamp}])
 
         if (counter > limit) do
-          {:fail, limit}
+          {:error, limit}
         else
           {:ok, counter}
         end
