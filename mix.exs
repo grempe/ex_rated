@@ -3,7 +3,7 @@ defmodule ExRated.Mixfile do
 
   def project do
     [app: :ex_rated,
-     version: "0.0.6",
+     version: "1.0.0",
      elixir: "~> 1.0",
      description: description,
      package: package,
@@ -50,7 +50,7 @@ defmodule ExRated.Mixfile do
   defp package do
     [# These are the default files included in the package
      files: ["lib", "priv", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
-     contributors: ["Glenn Rempe"],
+     maintainers: ["Glenn Rempe"],
      licenses: ["Apache 2.0"],
      links: %{"GitHub" => "https://github.com/grempe/ex_rated"}]
   end
