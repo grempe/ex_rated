@@ -36,4 +36,18 @@ defmodule ExRatedServerTest do
     assert {:error, 2} = ExRated.check_rate("my-bucket", 1000, 2)
   end
 
+  test "returns expected tuples on delete_bucket" do
+    assert {:ok, 1} = ExRated.check_rate("my-bucket1", 1000, 2)
+    assert {:ok, 2} = ExRated.check_rate("my-bucket1", 1000, 2)
+    assert {:error, 2} = ExRated.check_rate("my-bucket1", 1000, 2)
+    assert {:ok, 1} = ExRated.check_rate("my-bucket2", 1000, 2)
+    assert {:ok, 2} = ExRated.check_rate("my-bucket2", 1000, 2)
+    assert {:error, 2} = ExRated.check_rate("my-bucket2", 1000, 2)
+    assert :ok = ExRated.delete_bucket("my-bucket1")
+    assert {:ok, 1} = ExRated.check_rate("my-bucket1", 1000, 2)
+    assert {:error, 2} = ExRated.check_rate("my-bucket2", 1000, 2)
+
+    assert :error = ExRated.delete_bucket("unknown-bucket")
+  end
+
 end

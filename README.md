@@ -26,6 +26,20 @@ iex> ExRated.check_rate("my-rate-limited-api", 10_000, 5)
 
 The `ExRated.check_rate` function will return an `{:ok, Integer}` tuple if its OK to proceed with your rate limited function. The Integer returned is the current value of the incrementing counter showing how many times in the time scale window your function has already been called. If you are over limit a `{:error, Integer}` tuple will be returned where the Integer is always the limit you have specified in the function call.
 
+
+Call the ExRated application with `ExRated.delete_bucket/1`.  This function takes one argument:
+
+1. A `bucket name` (String).  You can have as many buckets as you need.
+
+For example, if you want to reset the counter for your API:
+
+```elixir
+iex> ExRated.delete_bucket("my-rate-limited-api")
+:ok
+```
+
+The `ExRated.delete_bucket` function will return an `:ok` on success or `:error` if the bucket doesn't exist
+
 ## Installation
 
 You can use ExRated in your projects in two steps:

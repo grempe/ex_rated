@@ -51,6 +51,26 @@ defmodule ExRated do
   end
 
   @doc """
+  Delete bucket to reset the counter.
+
+  ## Arguments:
+
+  - `id` (String) name of the client
+
+  ## Example - Reset counter for my-bucket
+
+      iex> ExRated.check_rate("my-bucket", 86400000, 2500)
+      {:ok, 1}
+      iex> ExRated.delete_bucket("my-bucket")
+      :ok
+
+  """
+  @spec delete_bucket(id::String.t) :: :ok | :error
+  def delete_bucket(id) do
+    GenServer.call(:ex_rated, {:delete_bucket, id})
+  end
+
+  @doc """
   Stop the rate limit counter server.
   """
   def stop(server) do
@@ -76,6 +96,12 @@ defmodule ExRated do
   def handle_call({id, scale, limit}, _from, state) do
     %{ets_table_name: ets_table_name} = state
     result = count_hit(id, scale, limit, ets_table_name)
+    {:reply, result, state}
+  end
+
+  def handle_call({:delete_bucket, id}, _from, state) do
+    %{ets_table_name: ets_table_name} = state
+    result = delete_bucket(id, ets_table_name)
     {:reply, result, state}
   end
 
@@ -128,6 +154,14 @@ defmodule ExRated do
         else
           {:ok, counter}
         end
+    end
+  end
+
+  defp delete_bucket(id, ets_table_name) do
+    import Ex2ms
+    case :ets.select_delete(ets_table_name, fun do {{bucket_number, bid},_,_,_} when bid == ^id -> true end) do
+      1 -> :ok
+      _ -> :error
     end
   end
 
