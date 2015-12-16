@@ -2,17 +2,18 @@ defmodule ExRated do
   use GenServer
 
   @moduledoc """
-    An OTP GenServer that provides the ability to manage rate limiting
+    An Elixir OTP GenServer that provides the ability to manage rate limiting
     for any process that needs it.  This rate limiter is based on the
     concept of a 'token bucket'.  You can read more here:
 
       http://en.wikipedia.org/wiki/Token_bucket
 
-    This application is a direct port of the Erlang 'raterlimiter' project
+    This application started as a direct port of the Erlang 'raterlimiter' project
     created by Alexander Sorokin (https://github.com/Gromina/raterlimiter,
     gromina@gmail.com, http://alexsorokin.ru) and the primary credit for
     the functionality goes to him. This has been implemented in Elixir
-    since I needed it, and as a learning experiment.
+    as a learning experiment and I hope you find it useful. Pull requests are
+    welcome.
   """
 
   ## Client API
@@ -30,13 +31,14 @@ defmodule ExRated do
   end
 
   @doc """
-  Check if the action you wish to take is within the rate limit bounds.
+  Check if the action you wish to take is within the rate limit bounds
+  and increment the buckets counter by 1 and its updated_at timestamp.
 
   ## Arguments:
 
-  - `id` (String) name of the client
-  - `scale` (Integer) of time (e.g. 60_000 = bucket every minute)
-  - `limit` (Integer) max size of bucket
+  - `id` (String) name of the bucket
+  - `scale` (Integer) of time in ms until the bucket rolls over. (e.g. 60_000 = empty bucket every minute)
+  - `limit` (Integer) the max size of a counter the bucket can hold.
 
   ## Examples
 
@@ -52,12 +54,14 @@ defmodule ExRated do
 
   @doc """
   Inspect bucket to get count, count_remaining, ms_to_next_bucket, created_at, updated_at.
+  This function is free of side-effects and should be called with the same arguments you
+  would use for `check_rate` if you intended to increment and check the bucket counter.
 
   ## Arguments:
 
-  - `id` (String) name of the client
-  - `scale` (Integer) of time (e.g. 60_000 = bucket every minute)
-  - `limit` (Integer) max size of bucket
+  - `id` (String) name of the bucket
+  - `scale` (Integer) of time the bucket you want to inspect was created with.
+  - `limit` (Integer) representing the max counter size the bucket was created with.
 
   ## Example - Reset counter for my-bucket
 
@@ -79,7 +83,7 @@ defmodule ExRated do
 
   ## Arguments:
 
-  - `id` (String) name of the client
+  - `id` (String) name of the bucket
 
   ## Example - Reset counter for my-bucket
 
@@ -104,11 +108,8 @@ defmodule ExRated do
   ## Server Callbacks
 
   def init(args) do
-
     [{:timeout, timeout}, {:cleanup_rate, cleanup_rate}, {:ets_table_name, ets_table_name}] = args
-
     :ets.new(ets_table_name, [:named_table, :ordered_set, :private])
-
     :timer.send_interval(cleanup_rate, :prune)
     {:ok, %{timeout: timeout, cleanup_rate: cleanup_rate, ets_table_name: ets_table_name}}
   end
@@ -227,13 +228,14 @@ defmodule ExRated do
 
   # Returns Erlang Time as milliseconds since 00:00 GMT, January 1, 1970
   defp timestamp()
-  case ExRated.Utils.get_otp_release() do
-    ver when ver >= 18 ->
-      defp timestamp(), do: :erlang.system_time(:milli_seconds)
-    _ ->
-      defp timestamp(), do: timestamp(:erlang.now())
+    case ExRated.Utils.get_otp_release() do
+      ver when ver >= 18 ->
+        defp timestamp(), do: :erlang.system_time(:milli_seconds)
+      _ ->
+        defp timestamp(), do: timestamp(:erlang.now())
   end
 
+  # OTP > 18
   defp timestamp({mega, sec, micro}) do
     1000 * (mega * 1000000 + sec) + round(micro/1000)
   end
