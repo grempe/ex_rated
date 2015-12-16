@@ -47,7 +47,31 @@ defmodule ExRated do
   """
   @spec check_rate(id::String.t, scale::integer, limit::integer) :: {:ok, count::integer} | {:error, limit::integer}
   def check_rate(id, scale, limit) do
-    GenServer.call(:ex_rated, {id, scale, limit})
+    GenServer.call(:ex_rated, {:check_rate, id, scale, limit})
+  end
+
+  @doc """
+  Inspect bucket to get count, count_remaining, ms_to_next_bucket, created_at, updated_at.
+
+  ## Arguments:
+
+  - `id` (String) name of the client
+  - `scale` (Integer) of time (e.g. 60_000 = bucket every minute)
+  - `limit` (Integer) max size of bucket
+
+  ## Example - Reset counter for my-bucket
+
+      ExRated.inspect_bucket("my-bucket", 86400000, 2500)
+      {0, 2500, 29389699, nil, nil}
+      ExRated.check_rate("my-bucket", 86400000, 2500)
+      {:ok, 1}
+      ExRated.inspect_bucket("my-bucket", 86400000, 2500)
+      {1, 2499, 29381612, 1450281014468, 1450281014468}
+
+  """
+  @spec inspect_bucket(id::String.t, scale::integer, limit::integer) :: {:ok, count::integer} | {:error, limit::integer}
+  def inspect_bucket(id, scale, limit) do
+    GenServer.call(:ex_rated, {:inspect_bucket, id, scale, limit})
   end
 
   @doc """
@@ -93,9 +117,15 @@ defmodule ExRated do
     {:stop, :normal, :ok, state}
   end
 
-  def handle_call({id, scale, limit}, _from, state) do
+  def handle_call({:check_rate, id, scale, limit}, _from, state) do
     %{ets_table_name: ets_table_name} = state
     result = count_hit(id, scale, limit, ets_table_name)
+    {:reply, result, state}
+  end
+
+  def handle_call({:inspect_bucket, id, scale, limit}, _from, state) do
+    %{ets_table_name: ets_table_name} = state
+    result = inspect_bucket(id, scale, limit, ets_table_name)
     {:reply, result, state}
   end
 
@@ -135,9 +165,7 @@ defmodule ExRated do
   ## Private Functions
 
   defp count_hit(id, scale, limit, ets_table_name) do
-    stamp         = timestamp()
-    bucket_number = trunc(stamp/scale)      # with scale = 1 bucket changes every millisecond
-    key           = {bucket_number, id}
+    {stamp, key} = stamp_key(id, scale)
 
     case :ets.member(ets_table_name, key) do
       false ->
@@ -157,12 +185,33 @@ defmodule ExRated do
     end
   end
 
+  defp inspect_bucket(id, scale, limit, ets_table_name) do
+    {stamp, key} = stamp_key(id, scale)
+    ms_to_next_bucket = (elem(key, 0) * scale) + scale - stamp
+
+    case :ets.member(ets_table_name, key) do
+      false ->
+        {0, limit, ms_to_next_bucket, nil, nil}
+      true ->
+        [{_, count, created_at, updated_at}] = :ets.lookup(ets_table_name, key)
+        count_remaining = if limit > count, do: limit - count, else: 0
+        {count, count_remaining, ms_to_next_bucket, created_at, updated_at}
+    end
+  end
+
   defp delete_bucket(id, ets_table_name) do
     import Ex2ms
     case :ets.select_delete(ets_table_name, fun do {{bucket_number, bid},_,_,_} when bid == ^id -> true end) do
       1 -> :ok
       _ -> :error
     end
+  end
+
+  defp stamp_key(id, scale) do
+    stamp         = timestamp()
+    bucket_number = trunc(stamp/scale)      # with scale = 1 bucket changes every millisecond
+    key           = {bucket_number, id}
+    {stamp, key}
   end
 
   # Removes old buckets and returns the number removed.

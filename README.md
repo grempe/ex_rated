@@ -27,6 +27,21 @@ iex> ExRated.check_rate("my-rate-limited-api", 10_000, 5)
 The `ExRated.check_rate` function will return an `{:ok, Integer}` tuple if its OK to proceed with your rate limited function. The Integer returned is the current value of the incrementing counter showing how many times in the time scale window your function has already been called. If you are over limit a `{:error, Integer}` tuple will be returned where the Integer is always the limit you have specified in the function call.
 
 
+Call the ExRated application with `ExRated.inspect_bucket/3`.  This function takes the same three arguments as `check_rate`:
+
+For example, if you want to inspect the bucket for your API:
+
+```elixir
+iex> ExRated.inspect_bucket("my-rate-limited-api", 10_000, 5)
+{0, 5, 2483, nil, nil}
+iex> ExRated.check_rate("my-rate-limited-api", 10_000, 5)
+{:ok, 1}
+iex> ExRated.inspect_bucket("my-rate-limited-api", 10_000, 5)
+{1, 4, 723, 1450282268397, 1450282268397}
+```
+
+The `ExRated.inspect_bucket` function will return a `{count, count_remaining, ms_to_next_bucket, created_at, updated_at}` tuple, count and count_remaining are integers, ms_to_next_bucket is the number of milliseconds before the bucket resets, created_at and updated_at are timestamps in millseconds.
+
 Call the ExRated application with `ExRated.delete_bucket/1`.  This function takes one argument:
 
 1. A `bucket name` (String).  You can have as many buckets as you need.
