@@ -63,7 +63,7 @@ You can use ExRated in your projects in two steps:
 
     ```elixir
     def deps do
-      [{:ex_rated, "~> 0.0.6"}]
+      [{:ex_rated, "~> 1.1.0"}]
     end
     ```
 
@@ -124,6 +124,11 @@ iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000
 ```
 
 ## Changes
+
+### v1.1.0
+
+  - Added `delete_bucket/1` function. Takes a bucket name and removes it now instead of waiting for pruning (Nick Sanders).
+  - Added `inspect_bucket/3` function. Returns metadata about buckets (Nick Sanders).
 
 ### v1.0.0
 

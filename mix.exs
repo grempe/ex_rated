@@ -3,7 +3,7 @@ defmodule ExRated.Mixfile do
 
   def project do
     [app: :ex_rated,
-     version: "1.0.0",
+     version: "1.1.0",
      elixir: "~> 1.0",
      description: description,
      package: package,
@@ -43,7 +43,7 @@ defmodule ExRated.Mixfile do
 
     For example, rate-limit calls to your favorite API which requires no more
     than `limit` API calls within a `scale` milliseconds time window. You can enforce
-    limits for windows as narrow as milliseconds, or as broad as 25 hours.
+    limits for windows as narrow as milliseconds, or as broad as you like.
     """
   end
 
