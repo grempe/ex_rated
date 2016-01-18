@@ -16,9 +16,9 @@ defmodule ExRated.Utils do
           {ver, _} when is_integer(ver) ->
             Process.put(:current_otp_release, ver)
             ver
-          _ ->
         end
-      ver -> ver
+      ver ->
+        ver
     end
   end
 end
