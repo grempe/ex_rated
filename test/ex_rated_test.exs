@@ -1,9 +1,19 @@
 defmodule ExRatedServerTest do
   use ExUnit.Case, async: true
 
-  setup do
-    {:ok, pid} = GenServer.start_link(ExRated, [ {:timeout, 10_000}, {:cleanup_rate,10_000}, {:ets_table_name, :ex_rated_buckets_test} ], [name: :ex_rated])
-    {:ok, exrated_server: pid}
+  setup context do
+
+    table = :ex_rated_buckets_test
+
+    {:ok, pid} = start_server(table, context[:persistent] || false)
+
+    on_exit fn ->
+      if context[:persistent] do
+        File.rm(table |> to_string)
+      end
+    end
+
+    {:ok, exrated_server: pid, exrated_table: table}
   end
 
   doctest ExRated
@@ -63,5 +73,48 @@ defmodule ExRatedServerTest do
   end
 
 
+  @tag persistent: false
+  test "data is not persisted on server stop", context do
+    assert {:ok, 1} = ExRated.check_rate("my-bucket", 10_000, 10)
+    ExRated.stop(context[:exrated_server])
+    assert File.exists?("ex_rated_buckets_test") == false
+  end
+
+  @tag persistent: true
+  test "data is persisted on server stop", context do
+    assert {:ok, 1} = ExRated.check_rate("my-bucket", 10_000, 10)
+    ExRated.stop(context[:exrated_server])
+    assert File.exists?("ex_rated_buckets_test")
+  end
+
+  @tag persistent: true
+  test "in memory data and on disk data are the same when persisted", context do
+    assert {:ok, 1} = ExRated.check_rate("my-bucket", 10_000, 10)
+    data = ExRated.inspect_bucket("my-bucket", 10_000, 10)
+    ExRated.stop(context[:exrated_server])
+
+    # assert process is not running
+    assert Process.alive?(context[:exrated_server]) == false
+
+    # restart server in persistent mode
+    {:ok, pid} = start_server(context[:exrated_table], true)
+
+    # assert it reloads the data from disk
+    # remove key #2 in data before comparison: it is a timestamp and it's never the same
+    volatile   = data |> Tuple.delete_at(2)
+    persistent = ExRated.inspect_bucket("my-bucket", 10_000, 10) |> Tuple.delete_at(2)
+
+    assert volatile == persistent
+    ExRated.stop(pid)
+  end
+
+  defp start_server(table, persistent) do
+    GenServer.start_link(ExRated, [
+      {:timeout, 10_000},
+      {:cleanup_rate,10_000},
+      {:ets_table_name, table},
+      {:persistent, persistent},
+    ], [name: :ex_rated])
+  end
 
 end

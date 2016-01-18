@@ -24,9 +24,10 @@ defmodule ExRated do
   def start_link(opts \\ []) do
     GenServer.start_link(__MODULE__,
                         [
-                           {:timeout,        (Application.get_env(:ex_rated, :timeout) || 90_000_000)},
-                           {:cleanup_rate,   (Application.get_env(:ex_rated, :cleanup_rate) || 60_000)},
-                           {:ets_table_name, (Application.get_env(:ex_rated, :ets_table_name) || :ex_rated_buckets)}
+                           {:timeout,        Application.get_env(:ex_rated, :timeout) || 90_000_000},
+                           {:cleanup_rate,   Application.get_env(:ex_rated, :cleanup_rate) || 60_000},
+                           {:ets_table_name, Application.get_env(:ex_rated, :ets_table_name) || :ex_rated_buckets},
+                           {:persistent,     Application.get_env(:ex_rated, :persistent) || false},
                         ], opts)
   end
 
@@ -108,10 +109,17 @@ defmodule ExRated do
   ## Server Callbacks
 
   def init(args) do
-    [{:timeout, timeout}, {:cleanup_rate, cleanup_rate}, {:ets_table_name, ets_table_name}] = args
-    :ets.new(ets_table_name, [:named_table, :ordered_set, :private])
+    [
+      {:timeout, timeout},
+      {:cleanup_rate, cleanup_rate},
+      {:ets_table_name, ets_table_name},
+      {:persistent, persistent}
+    ] = args
+
+    open_table(ets_table_name, persistent || false)
     :timer.send_interval(cleanup_rate, :prune)
-    {:ok, %{timeout: timeout, cleanup_rate: cleanup_rate, ets_table_name: ets_table_name}}
+    {:ok, %{timeout: timeout, cleanup_rate: cleanup_rate,
+      ets_table_name: ets_table_name, persistent: persistent}}
   end
 
   def handle_call(:stop, _from, state) do
@@ -154,7 +162,10 @@ defmodule ExRated do
     {:noreply, state}
   end
 
-  def terminate(_reason, _state) do
+  def terminate(_reason, state) do
+    # if persistent is true save ETS table on disk and then close DETS table
+    if persistent?(state), do: persist_and_close(state)
+
     :ok
   end
 
@@ -164,6 +175,31 @@ defmodule ExRated do
 
 
   ## Private Functions
+
+  defp open_table(ets_table_name, false) do
+    :ets.new(ets_table_name, [:named_table, :ordered_set, :public])
+  end
+
+  defp open_table(ets_table_name, true) do
+    open_table(ets_table_name, false)
+    :dets.open_file(ets_table_name, [{:file, ets_table_name}, {:repair, true}])
+    :ets.delete_all_objects(ets_table_name)
+    :ets.from_dets(ets_table_name, ets_table_name)
+  end
+
+  defp persistent?(state) do
+    Map.get(state, :persistent) == true
+  end
+
+  defp persist(state) do
+    %{ets_table_name: ets_table_name} = state
+    :ets.to_dets(ets_table_name, ets_table_name)
+  end
+
+  defp persist_and_close(state) do
+    persist(state)
+    :dets.close(Map.get(state, :ets_table_name))
+  end
 
   defp count_hit(id, scale, limit, ets_table_name) do
     {stamp, key} = stamp_key(id, scale)
