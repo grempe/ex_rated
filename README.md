@@ -63,7 +63,7 @@ You can use ExRated in your projects in two steps:
 
     ```elixir
     def deps do
-      [{:ex_rated, "~> 1.1.0"}]
+      [{:ex_rated, "~> 1.2.1"}]
     end
     ```
 
