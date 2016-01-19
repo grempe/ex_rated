@@ -127,6 +127,11 @@ iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000
 
 ## Changes
 
+### v1.2.1
+
+  - Change ETS Table to private.
+  - Change ETS table name to a non-test name.
+
 ### v1.2.0
 
   - Added `{:persistent, false}` option to server config to allow persisting data to disk.
