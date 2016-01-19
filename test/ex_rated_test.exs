@@ -77,14 +77,14 @@ defmodule ExRatedServerTest do
   test "data is not persisted on server stop", context do
     assert {:ok, 1} = ExRated.check_rate("my-bucket", 10_000, 10)
     ExRated.stop(context[:exrated_server])
-    assert File.exists?("ex_rated_buckets_test") == false
+    assert File.exists?(context[:exrated_table] |> to_string) == false
   end
 
   @tag persistent: true
   test "data is persisted on server stop", context do
     assert {:ok, 1} = ExRated.check_rate("my-bucket", 10_000, 10)
     ExRated.stop(context[:exrated_server])
-    assert File.exists?("ex_rated_buckets_test")
+    assert File.exists?(context[:exrated_table] |> to_string)
   end
 
   @tag persistent: true

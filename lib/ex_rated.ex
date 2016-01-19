@@ -177,7 +177,7 @@ defmodule ExRated do
   ## Private Functions
 
   defp open_table(ets_table_name, false) do
-    :ets.new(ets_table_name, [:named_table, :ordered_set, :public])
+    :ets.new(ets_table_name, [:named_table, :ordered_set, :private])
   end
 
   defp open_table(ets_table_name, true) do
