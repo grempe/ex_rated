@@ -33,7 +33,7 @@ defmodule ExRated.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [{:ex2ms, "~> 1.3.0"}]
+    [{:ex2ms, "~> 1.4.0"}]
   end
 
   defp description do
