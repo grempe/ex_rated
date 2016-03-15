@@ -1,3 +1,3 @@
 %{"benchwarmer": {:package, "0.0.1"},
-  "ex2ms": {:hex, :ex2ms, "1.3.0"},
+  "ex2ms": {:hex, :ex2ms, "1.4.0"},
   "timex": {:package, "0.12.3"}}
