@@ -7,7 +7,11 @@ defmodule ExRated.Mixfile do
      elixir: "~> 1.2",
      description: description,
      package: package,
-     deps: deps]
+     deps: deps,
+     name: "ExRated",
+     source_url: "https://github.com/grempe/ex_rated",
+     homepage_url: "https://github.com/grempe/ex_rated",
+     docs: [extras: ["README.md"]]]
   end
 
   # Configuration for the OTP application
@@ -33,7 +37,8 @@ defmodule ExRated.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [{:ex2ms, "~> 1.4.0"}]
+    [{:ex2ms, "~> 1.4.0"},
+     {:ex_doc, "~> 0.11", only: :dev}]
   end
 
   defp description do
