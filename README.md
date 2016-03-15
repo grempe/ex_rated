@@ -63,7 +63,7 @@ You can use ExRated in your projects in two steps:
 
     ```elixir
     def deps do
-      [{:ex_rated, "~> 1.2.1"}]
+      [{:ex_rated, "~> 1.2"}]
     end
     ```
 
@@ -111,7 +111,7 @@ Temporarily add `Benchwarmer` to your dependencies in `mix.exs` as shown below a
 ```
 defp deps do
   [
-    {:ex2ms, "~> 1.3.0"},
+    {:ex2ms, "~> 1.4.0"},
     {:benchwarmer, "~> 0.0.2"}
   ]
 end
@@ -126,6 +126,11 @@ iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000
 ```
 
 ## Changes
+
+### v1.2.2
+
+  - Update Elixir to v1.2
+  - Update `ex2ms` to v1.4
 
 ### v1.2.1
 
