@@ -74,7 +74,11 @@ defmodule ExRated do
       {1, 2499, 29381612, 1450281014468, 1450281014468}
 
   """
-  @spec inspect_bucket(id::String.t, scale::integer, limit::integer) :: {:ok, count::integer} | {:error, limit::integer}
+  @spec inspect_bucket(id::String.t, scale::integer, limit::integer) :: {count::integer,
+                                                                         count_remaining::integer,
+                                                                         ms_to_next_bucket::integer,
+                                                                         created_at :: integer | nil,
+                                                                         updated_at :: integer | nil}
   def inspect_bucket(id, scale, limit) do
     GenServer.call(:ex_rated, {:inspect_bucket, id, scale, limit})
   end
