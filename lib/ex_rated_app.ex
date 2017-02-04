@@ -9,7 +9,7 @@ defmodule ExRated.App do
     children = [
       # Define workers and child supervisors to be supervised
       # worker(ExRated.Worker, [arg1, arg2, arg3])
-      worker(ExRated, [[name: :ex_rated]])
+      worker(ExRated, [[], [name: :ex_rated]])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
