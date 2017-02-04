@@ -22,8 +22,12 @@ defmodule ExRated do
   Starts the ExRated rate limit counter server.
   """
   def start_link(args, opts \\ []) do
-    GenServer.start_link(__MODULE__, (args == []) || app_args_with_defaults(), opts)
+    case args do
+      [] -> GenServer.start_link(__MODULE__, app_args_with_defaults(), opts)
+      _ -> GenServer.start_link(__MODULE__, args, opts)
+    end
   end
+
 
   @doc """
   Check if the action you wish to take is within the rate limit bounds
