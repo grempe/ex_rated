@@ -3,7 +3,7 @@ defmodule ExRated.Mixfile do
 
   def project do
     [app: :ex_rated,
-     version: "1.2.2",
+     version: "1.3",
      elixir: "~> 1.2",
      description: description(),
      package: package(),
