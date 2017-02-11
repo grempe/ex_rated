@@ -21,15 +21,13 @@ defmodule ExRated do
   @doc """
   Starts the ExRated rate limit counter server.
   """
-  def start_link(opts \\ []) do
-    GenServer.start_link(__MODULE__,
-                        [
-                           {:timeout,        Application.get_env(:ex_rated, :timeout) || 90_000_000},
-                           {:cleanup_rate,   Application.get_env(:ex_rated, :cleanup_rate) || 60_000},
-                           {:ets_table_name, Application.get_env(:ex_rated, :ets_table_name) || :ex_rated_buckets},
-                           {:persistent,     Application.get_env(:ex_rated, :persistent) || false},
-                        ], opts)
+  def start_link(args, opts \\ []) do
+    case args do
+      [] -> GenServer.start_link(__MODULE__, app_args_with_defaults(), opts)
+      _ -> GenServer.start_link(__MODULE__, args, opts)
+    end
   end
+
 
   @doc """
   Check if the action you wish to take is within the rate limit bounds
@@ -278,6 +276,14 @@ defmodule ExRated do
   # OTP > 18
   defp timestamp({mega, sec, micro}) do
     1000 * (mega * 1000000 + sec) + round(micro/1000)
+  end
+
+  # Fetch configured args
+  defp app_args_with_defaults() do
+    [timeout: Application.get_env(:ex_rated, :timeout) || 90_000_000,
+     cleanup_rate: Application.get_env(:ex_rated, :cleanup_rate) || 60_000,
+     ets_table_name: Application.get_env(:ex_rated, :ets_table_name) || :ex_rated_buckets,
+     persistent: Application.get_env(:ex_rated, :persistent) || false]
   end
 
 end

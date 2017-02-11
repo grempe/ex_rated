@@ -3,11 +3,11 @@ defmodule ExRated.Mixfile do
 
   def project do
     [app: :ex_rated,
-     version: "1.2.2",
+     version: "1.3.0",
      elixir: "~> 1.2",
-     description: description,
-     package: package,
-     deps: deps,
+     description: description(),
+     package: package(),
+     deps: deps(),
      name: "ExRated",
      source_url: "https://github.com/grempe/ex_rated",
      homepage_url: "https://github.com/grempe/ex_rated",
