@@ -47,8 +47,7 @@ defmodule ExRated.Mixfile do
     to any service that requires it.
 
     For example, rate-limit calls to your favorite API which requires no more
-    than `limit` API calls within a `scale` milliseconds time window. You can enforce
-    limits for windows as narrow as milliseconds, or as broad as you like.
+    than `limit` API calls within a `scale` milliseconds time window.
     """
   end
 
