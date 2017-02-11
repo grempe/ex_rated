@@ -1,5 +1,5 @@
 %{"benchwarmer": {:package, "0.0.1"},
   "earmark": {:hex, :earmark, "1.1.1", "433136b7f2e99cde88b745b3a0cfc3fbc81fe58b918a09b40fce7f00db4d8187", [:mix], []},
-  "ex2ms": {:git, "https://github.com/ericmj/ex2ms.git", "21ed62b8abf5bcfb7714c94ded63fc23e93104de", [ref: "21ed62b8abf5bcfb7714c94ded63fc23e93104de"]},
+  "ex2ms": {:hex, :ex2ms, "1.4.0", "e43b410888b45ba363ea6650db3736db3e455a0a412ec244ac633fede857bcb2", [:mix], []},
   "ex_doc": {:hex, :ex_doc, "0.14.5", "c0433c8117e948404d93ca69411dd575ec6be39b47802e81ca8d91017a0cf83c", [:mix], [{:earmark, "~> 1.0", [hex: :earmark, optional: false]}]},
   "timex": {:package, "0.12.3"}}
