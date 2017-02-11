@@ -131,7 +131,6 @@ iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000
 
 ### v1.3.0
 
-  - Pin the ex2ms dependency to the current git commit on master.
   - Fix compilation warnings. [@walkr]
   - Start app properly with no args [@walkr]
   - Modify start_link to be callable by `Supervisor.Spec.worker` fun [@walkr]
