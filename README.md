@@ -113,7 +113,7 @@ Temporarily add `Benchwarmer` to your dependencies in `mix.exs` as shown below a
 ```
 defp deps do
   [
-    {:ex2ms, "~> 1.4.0"},
+    {:ex2ms, "~> 1.5"},
     {:benchwarmer, "~> 0.0.2"}
   ]
 end
@@ -128,6 +128,10 @@ iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000
 ```
 
 ## Changes
+
+### v1.3.1
+
+  - Update `ex2ms` to v1.5
 
 ### v1.3.0
 
