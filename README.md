@@ -106,25 +106,23 @@ mix test --no-start
 
 ## Is it fast?
 
-You can use the `Benchwarmer` library to do a quick performance test.
+You can use the `Benchfella` library to do a quick performance test.
 
-Temporarily add `Benchwarmer` to your dependencies in `mix.exs` as shown below and run `mix deps.get` and `iex -S mix`:
+On a 2017 Macbook Pro I can do 1,000,000 checks, averaging 2.31 µs/op.
 
-```
-defp deps do
-  [
-    {:ex2ms, "~> 1.5"},
-    {:benchwarmer, "~> 0.0.2"}
-  ]
-end
-```
+```text
+$ mix bench
+Settings:
+  duration:      1.0 s
 
-On my 2014 Macbook Pro I can do 262,000 checks in about 1.2 seconds.
+## BasicBench
+[15:09:49] 1/1: Basic Bench
 
-```elixir
-iex> Benchwarmer.benchmark fn -> {:ok, _} = ExRated.check_rate("my-bucket", 1000000, 10_000_000) end
-*** #Function<20.90072148/0 in :erl_eval.expr/5> ***
-1.2 sec   262K iterations   4.9 μs/op
+Finished in 2.57 seconds
+
+## BasicBench
+benchmark na iterations   average time
+Basic Bench     1000000   2.31 µs/op
 ```
 
 ## Changes
