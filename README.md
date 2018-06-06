@@ -8,7 +8,7 @@ ExRated is:
 
 You can learn more about the concept for this rate limiter in [ the Token Bucket article on Wikipedia](http://en.wikipedia.org/wiki/Token_bucket)
 
-If you use the PhoenixFramework there is also a great blog post on [Rate Limiting a Phoenix API](http://blog.danielberkompas.com/elixir/2015/06/16/rate-limiting-a-phoenix-api.html) by [danielberkompas](https://github.com/danielberkompas) describing how to write a plug
+If you use the PhoenixFramework there is also a great blog post on [Rate Limiting a Phoenix API](https://blog.danielberkompas.com/2015/06/16/rate-limiting-a-phoenix-api/) by [danielberkompas](https://github.com/danielberkompas) describing how to write a plug
 to use ExRated in your own API. Its fast and its easy.
 
 ## Usage
