@@ -127,6 +127,13 @@ Basic Bench     1000000   2.31 µs/op
 
 ## Changes
 
+### v1.3.2
+
+  - Automatic application inference
+  - Update ex_doc dependency
+  - Update minimum Elixer to 1.6+
+  - Update "Rate Limiting" blogpost URL reference
+
 ### v1.3.1
 
   - Update `ex2ms` to v1.5
