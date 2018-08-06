@@ -22,7 +22,7 @@ defmodule ExRated.Mixfile do
   # cleanup_rate :   cleanup every X milliseconds (60_000, every 1 minute)
   # ets_table_name : the registered name of the ETS table where buckets are stored.
   def application do
-    [applications: [:logger],
+    [extra_applications: [:logger],
      env: [timeout: 90_000_000, cleanup_rate: 60_000, ets_table_name: :ex_rated_buckets],
      mod: {ExRated.App, []}]
   end
