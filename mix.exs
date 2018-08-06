@@ -39,7 +39,7 @@ defmodule ExRated.Mixfile do
   defp deps do
     [{:ex2ms, "~> 1.5"},
      {:benchfella, "~> 0.3.0", only: :dev},
-     {:ex_doc, "~> 0.11", only: :dev}]
+     {:ex_doc, "~> 0.19", only: :dev}]
   end
 
   defp description do
