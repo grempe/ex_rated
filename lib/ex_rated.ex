@@ -270,12 +270,10 @@ defmodule ExRated do
       ver when ver >= 18 ->
         defp timestamp(), do: :erlang.system_time(:milli_seconds)
       _ ->
-        defp timestamp(), do: timestamp(:erlang.now())
-  end
-
-  # OTP > 18
-  defp timestamp({mega, sec, micro}) do
-    1000 * (mega * 1000000 + sec) + round(micro/1000)
+        defp timestamp() do
+          {mega, sec, micro} = :erlang.now()
+          1000 * (mega * 1000000 + sec) + round(micro/1000)
+        end
   end
 
   # Fetch configured args
