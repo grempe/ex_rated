@@ -6,16 +6,16 @@ ExRated is:
 2. An OTP GenServer process that allows you to rate limit calls to something like an external API.
 3. The Hex.pm package with the naughty name.
 
-You can learn more about the concept for this rate limiter in [ the Token Bucket article on Wikipedia](http://en.wikipedia.org/wiki/Token_bucket)
+You can learn more about the concept for this rate limiter in [the Token Bucket article on Wikipedia](http://en.wikipedia.org/wiki/Token_bucket)
 
 If you use the PhoenixFramework there is also a great blog post on [Rate Limiting a Phoenix API](https://blog.danielberkompas.com/2015/06/16/rate-limiting-a-phoenix-api) by [danielberkompas](https://github.com/danielberkompas) describing how to write a plug
 to use ExRated in your own API. Its fast and its easy.
 
 ## Usage
 
-Call the ExRated application with `ExRated.check_rate/3`.  This function takes three arguments:
+Call the ExRated application with `ExRated.check_rate/3`. This function takes three arguments:
 
-1. A `bucket name` (String).  You can have as many buckets as you need.
+1. A `bucket name` (String). You can have as many buckets as you need.
 2. A `scale` (Integer). The time scale in milliseconds that the bucket is valid for.
 3. A `limit` (Integer). How many actions you want to limit your app to in the time scale provided.
 
@@ -28,8 +28,7 @@ iex> ExRated.check_rate("my-rate-limited-api", 10_000, 5)
 
 The `ExRated.check_rate` function will return an `{:ok, Integer}` tuple if its OK to proceed with your rate limited function. The Integer returned is the current value of the incrementing counter showing how many times in the time scale window your function has already been called. If you are over limit a `{:error, Integer}` tuple will be returned where the Integer is always the limit you have specified in the function call.
 
-
-Call the ExRated application with `ExRated.inspect_bucket/3`.  This function takes the same three arguments as `check_rate`:
+Call the ExRated application with `ExRated.inspect_bucket/3`. This function takes the same three arguments as `check_rate`:
 
 For example, if you want to inspect the bucket for your API:
 
@@ -44,9 +43,9 @@ iex> ExRated.inspect_bucket("my-rate-limited-api", 10_000, 5)
 
 The `ExRated.inspect_bucket` function will return a `{count, count_remaining, ms_to_next_bucket, created_at, updated_at}` tuple, count and count_remaining are integers, ms_to_next_bucket is the number of milliseconds before the bucket resets, created_at and updated_at are timestamps in millseconds.
 
-Call the ExRated application with `ExRated.delete_bucket/1`.  This function takes one argument:
+Call the ExRated application with `ExRated.delete_bucket/1`. This function takes one argument:
 
-1. A `bucket name` (String).  You can have as many buckets as you need.
+1. A `bucket name` (String). You can have as many buckets as you need.
 
 For example, if you want to reset the counter for your API:
 
@@ -63,19 +62,19 @@ You can use ExRated in your projects in two steps:
 
 1. Add ExRated to your `mix.exs` dependencies:
 
-    ```elixir
-    def deps do
-      [{:ex_rated, "~> 1.2"}]
-    end
-    ```
+   ```elixir
+   def deps do
+     [{:ex_rated, "~> 1.2"}]
+   end
+   ```
 
 2. List `:ex_rated` in your application dependencies:
 
-    ```elixir
-    def application do
-      [applications: [:ex_rated]]
-    end
-    ```
+   ```elixir
+   def application do
+     [applications: [:ex_rated]]
+   end
+   ```
 
 You can also start the GenServer manually, and pass it custom config, with something like:
 
@@ -94,7 +93,6 @@ Where the args and their defaults are:
 `{:persistent, false}` : Whether to persist ETS table to disk with DETS on server stop/restart.
 
 `[name: :ex_rated]` : The registered name of the ExRated GenServer.
-
 
 ## Testing
 
@@ -127,51 +125,55 @@ Basic Bench     1000000   2.31 µs/op
 
 ## Changes
 
+### v1.3.3
+
+- Eliminate `warning: function timestamp/1 is unused`. [@brianberlin]
+
 ### v1.3.2
 
-  - Automatic application inference
-  - Update ex_doc dependency
-  - Update minimum Elixer to 1.6+
-  - Update "Rate Limiting" blogpost URL reference
+- Automatic application inference
+- Update ex_doc dependency
+- Update minimum Elixer to 1.6+
+- Update "Rate Limiting" blogpost URL reference
 
 ### v1.3.1
 
-  - Update `ex2ms` to v1.5
+- Update `ex2ms` to v1.5
 
 ### v1.3.0
 
-  - Fix compilation warnings. [@walkr]
-  - Start app properly with no args [@walkr]
-  - Modify start_link to be callable by `Supervisor.Spec.worker` fun [@walkr]
+- Fix compilation warnings. [@walkr]
+- Start app properly with no args [@walkr]
+- Modify start_link to be callable by `Supervisor.Spec.worker` fun [@walkr]
 
 ### v1.2.2
 
-  - Update Elixir to v1.2
-  - Update `ex2ms` to v1.4
+- Update Elixir to v1.2
+- Update `ex2ms` to v1.4
 
 ### v1.2.1
 
-  - Change ETS Table to private.
-  - Change ETS table name to a non-test name.
+- Change ETS Table to private.
+- Change ETS table name to a non-test name.
 
 ### v1.2.0
 
-  - Added `{:persistent, false}` option to server config to allow persisting data to disk.
-  - Fixed minor compilation warning.
+- Added `{:persistent, false}` option to server config to allow persisting data to disk.
+- Fixed minor compilation warning.
 
 ### v1.1.0
 
-  - Added `delete_bucket/1` function. Takes a bucket name and removes it now instead of waiting for pruning (Nick Sanders).
-  - Added `inspect_bucket/3` function. Returns metadata about buckets (Nick Sanders).
+- Added `delete_bucket/1` function. Takes a bucket name and removes it now instead of waiting for pruning (Nick Sanders).
+- Added `inspect_bucket/3` function. Returns metadata about buckets (Nick Sanders).
 
 ### v1.0.0
 
-  - [BREAKING] Return {:error, limit} instead of {:fail, limit} to be a bit more idiomatic. Requires semver major version number change.
-  - Support Elixir version 1.1 in addition to 1.0
+- [BREAKING] Return {:error, limit} instead of {:fail, limit} to be a bit more idiomatic. Requires semver major version number change.
+- Support Elixir version 1.1 in addition to 1.0
 
 ### v0.0.6
 
-  - ExRated internally calls `:erlang.system_time(:milli_seconds)` provided by the new [Time API in OTP 18](http://www.erlang.org/doc/apps/erts/time_correction.html) and greater if available, and will fall back gracefully to the old `:erlang.now()` in older versions. Thanks to Mitchell Henke (mitchellhenke) for the enhancement.
+- ExRated internally calls `:erlang.system_time(:milli_seconds)` provided by the new [Time API in OTP 18](http://www.erlang.org/doc/apps/erts/time_correction.html) and greater if available, and will fall back gracefully to the old `:erlang.now()` in older versions. Thanks to Mitchell Henke (mitchellhenke) for the enhancement.
 
 ## License
 
