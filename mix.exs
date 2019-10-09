@@ -11,6 +11,7 @@ defmodule ExRated.Mixfile do
      name: "ExRated",
      source_url: "https://github.com/grempe/ex_rated",
      homepage_url: "https://github.com/grempe/ex_rated",
+     aliases: [test: "test --no-start"],
      docs: [extras: ["README.md"]]]
   end
 

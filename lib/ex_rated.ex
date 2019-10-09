@@ -35,7 +35,7 @@ defmodule ExRated do
 
   ## Arguments:
 
-  - `id` (String) name of the bucket
+  - `id` (Erlang term()) name of the bucket
   - `scale` (Integer) of time in ms until the bucket rolls over. (e.g. 60_000 = empty bucket every minute)
   - `limit` (Integer) the max size of a counter the bucket can hold.
 
@@ -46,7 +46,7 @@ defmodule ExRated do
       {:ok, 1}
 
   """
-  @spec check_rate(id::String.t, scale::integer, limit::integer) :: {:ok, count::integer} | {:error, limit::integer}
+  @spec check_rate(id::any, scale::integer, limit::integer) :: {:ok, count::integer} | {:error, limit::integer}
   def check_rate(id, scale, limit) do
     ets_table_name = ets_table_name()
     count_hit(id, scale, limit, ets_table_name)
@@ -59,7 +59,7 @@ defmodule ExRated do
 
   ## Arguments:
 
-  - `id` (String) name of the bucket
+  - `id` (Erlang term()) name of the bucket
   - `scale` (Integer) of time the bucket you want to inspect was created with.
   - `limit` (Integer) representing the max counter size the bucket was created with.
 
@@ -73,7 +73,7 @@ defmodule ExRated do
       {1, 2499, 29381612, 1450281014468, 1450281014468}
 
   """
-  @spec inspect_bucket(id::String.t, scale::integer, limit::integer) :: {count::integer,
+  @spec inspect_bucket(id::any, scale::integer, limit::integer) :: {count::integer,
                                                                          count_remaining::integer,
                                                                          ms_to_next_bucket::integer,
                                                                          created_at :: integer | nil,
