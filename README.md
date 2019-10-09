@@ -15,7 +15,7 @@ to use ExRated in your own API. Its fast and its easy.
 
 Call the ExRated application with `ExRated.check_rate/3`. This function takes three arguments:
 
-1. A `bucket name` (String). You can have as many buckets as you need.
+1. A `bucket name` (Erlang term, typically String). You can have as many buckets as you need.
 2. A `scale` (Integer). The time scale in milliseconds that the bucket is valid for.
 3. A `limit` (Integer). How many actions you want to limit your app to in the time scale provided.
 

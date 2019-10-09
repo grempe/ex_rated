@@ -112,6 +112,12 @@ defmodule ExRatedServerTest do
     ExRated.stop(pid)
   end
 
+  test "bucket names can be any()" do
+    Enum.each([true, nil, :atom, %{map: :type}, self(), {:a, 5, "x"}, 0.1, 5, ["a", "b"]], fn e ->
+      assert {:ok, 1} = ExRated.check_rate(e, 10000, 10)
+    end)
+  end
+
   defp start_server(table, persistent) do
     GenServer.start_link(ExRated, [
       {:timeout, 10_000},
