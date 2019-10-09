@@ -203,6 +203,8 @@ defmodule ExRated do
     :dets.close(Map.get(state, :ets_table_name))
   end
 
+  defp count_hit(_id, _scale, 0, _ets_table_name), do: {:error, 0}
+
   defp count_hit(id, scale, limit, ets_table_name) do
     {stamp, key} = stamp_key(id, scale)
 

@@ -72,6 +72,10 @@ defmodule ExRatedServerTest do
     assert :error = ExRated.delete_bucket("unknown-bucket")
   end
 
+  test "buckets with 0 limit always return {:error, 0}" do
+    assert {:error, 0} = ExRated.check_rate("zero-bucket", 1000, 0)
+  end
+
 
   @tag persistent: false
   test "data is not persisted on server stop", context do
