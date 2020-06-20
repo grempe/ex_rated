@@ -79,16 +79,29 @@ You can use ExRated in your projects in two steps:
 You can also start the GenServer manually, and pass it custom config, with something like:
 
 ```elixir
-{:ok, pid} = GenServer.start_link(ExRated, [ {:timeout, 10_000}, {:cleanup_rate, 10_000}, {:ets_table_name, :ex_rated_buckets}, {:persistent, false} ], [name: :ex_rated])
+{:ok, pid} = GenServer.start_link(ExRated, [ {:timeout, 10_000}, {:cleanup_rate, 10_000}, {:persistent, false} ], [name: :ex_rated])
 ```
 
-Where the args and their defaults are:
+Alternatively, you can configure them in your `config/config.exs` (or
+other config) file like
+```
+config :exrated,
+    timeout: 10_000,
+	cleanup_rate: 10_000,
+	persisent: false,
+	name: :ex_rated,
+	ets_table_name: :ets_rated_test_buckets
+```
+
+These args and their defaults are:
 
 `{:timeout, 90_000_000}` : buckets older than this in milliseconds will be automatically pruned.
 
 `{:cleanup_rate, 60_000}` : how often, in milliseconds, the bucket pruning process will be run.
 
-`{:ets_table_name, :ex_rated_buckets}` : The atom name of the ETS table.
+`{:ets_table_name, :ex_rated_buckets}` : The atom name of the ETS
+table.  This can be configured within your `config` files but not when
+starting the GenServer manually.
 
 `{:persistent, false}` : Whether to persist ETS table to disk with DETS on server stop/restart.
 

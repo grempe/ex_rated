@@ -5,7 +5,6 @@ defmodule BasicBench do
       GenServer.start_link(ExRated, [
         {:timeout, 10_000},
         {:cleanup_rate,10_000},
-        {:ets_table_name, :ex_rated_buckets_benchfella},
         {:persistent, false},
       ], [name: :ex_rated])
     end

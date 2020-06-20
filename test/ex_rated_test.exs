@@ -3,7 +3,7 @@ defmodule ExRatedServerTest do
 
   setup context do
 
-    table = :ex_rated_buckets_test
+    table = Application.get_env(:ex_rated, :ets_table_name, :ex_rated_buckets)
 
     {:ok, pid} = start_server(table, context[:persistent] || false)
 
@@ -116,7 +116,6 @@ defmodule ExRatedServerTest do
     GenServer.start_link(ExRated, [
       {:timeout, 10_000},
       {:cleanup_rate,10_000},
-      {:ets_table_name, table},
       {:persistent, persistent},
     ], [name: :ex_rated])
   end

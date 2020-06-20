@@ -24,7 +24,7 @@ defmodule ExRated do
   def start_link(args, opts \\ []) do
     case args do
       [] -> GenServer.start_link(__MODULE__, app_args_with_defaults(), opts)
-      _ -> GenServer.start_link(__MODULE__, args, opts)
+      _ -> GenServer.start_link(__MODULE__, Keyword.merge(app_args_with_defaults(), args), opts)
     end
   end
 
@@ -48,7 +48,8 @@ defmodule ExRated do
   """
   @spec check_rate(id::String.t, scale::integer, limit::integer) :: {:ok, count::integer} | {:error, limit::integer}
   def check_rate(id, scale, limit) do
-    GenServer.call(:ex_rated, {:check_rate, id, scale, limit})
+    ets_table_name = ets_table_name()
+    count_hit(id, scale, limit, ets_table_name)
   end
 
   @doc """
@@ -114,34 +115,26 @@ defmodule ExRated do
     [
       {:timeout, timeout},
       {:cleanup_rate, cleanup_rate},
-      {:ets_table_name, ets_table_name},
       {:persistent, persistent}
     ] = args
 
     open_table(ets_table_name, persistent || false)
     :timer.send_interval(cleanup_rate, :prune)
-    {:ok, %{timeout: timeout, cleanup_rate: cleanup_rate,
-      ets_table_name: ets_table_name, persistent: persistent}}
+    {:ok, %{timeout: timeout, cleanup_rate: cleanup_rate, persistent: persistent}}
   end
 
   def handle_call(:stop, _from, state) do
     {:stop, :normal, :ok, state}
   end
 
-  def handle_call({:check_rate, id, scale, limit}, _from, state) do
-    %{ets_table_name: ets_table_name} = state
-    result = count_hit(id, scale, limit, ets_table_name)
-    {:reply, result, state}
-  end
-
   def handle_call({:inspect_bucket, id, scale, limit}, _from, state) do
-    %{ets_table_name: ets_table_name} = state
+    ets_table_name = ets_table_name()
     result = inspect_bucket(id, scale, limit, ets_table_name)
     {:reply, result, state}
   end
 
   def handle_call({:delete_bucket, id}, _from, state) do
-    %{ets_table_name: ets_table_name} = state
+    ets_table_name = ets_table_name()
     result = delete_bucket(id, ets_table_name)
     {:reply, result, state}
   end
@@ -155,7 +148,8 @@ defmodule ExRated do
   end
 
   def handle_info(:prune, state) do
-    %{timeout: timeout, ets_table_name: ets_table_name} = state
+    %{timeout: timeout} = state
+    ets_table_name = ets_table_name()
     prune_expired_buckets(timeout, ets_table_name)
     {:noreply, state}
   end
@@ -179,7 +173,7 @@ defmodule ExRated do
   ## Private Functions
 
   defp open_table(ets_table_name, false) do
-    :ets.new(ets_table_name, [:named_table, :ordered_set, :private])
+    :ets.new(ets_table_name, [:named_table, :ordered_set, :public, read_concurrency: true, write_concurrency: true])
   end
 
   defp open_table(ets_table_name, true) do
@@ -194,7 +188,7 @@ defmodule ExRated do
   end
 
   defp persist(state) do
-    %{ets_table_name: ets_table_name} = state
+    ets_table_name = ets_table_name()
     :ets.to_dets(ets_table_name, ets_table_name)
   end
 
@@ -276,14 +270,19 @@ defmodule ExRated do
           {mega, sec, micro} = :erlang.now()
           1000 * (mega * 1000000 + sec) + round(micro/1000)
         end
+    end
+
+  defp ets_table_name() do
+    Application.get_env(:ex_rated, :ets_table_name) || :ex_rated_buckets
   end
 
   # Fetch configured args
   defp app_args_with_defaults() do
-    [timeout: Application.get_env(:ex_rated, :timeout) || 90_000_000,
-     cleanup_rate: Application.get_env(:ex_rated, :cleanup_rate) || 60_000,
-     ets_table_name: Application.get_env(:ex_rated, :ets_table_name) || :ex_rated_buckets,
-     persistent: Application.get_env(:ex_rated, :persistent) || false]
+    [
+      timeout: Application.get_env(:ex_rated, :timeout) || 90_000_000,
+      cleanup_rate: Application.get_env(:ex_rated, :cleanup_rate) || 60_000,
+      persistent: Application.get_env(:ex_rated, :persistent) || false
+    ]
   end
 
 end
