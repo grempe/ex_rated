@@ -118,7 +118,7 @@ defmodule ExRated do
       {:persistent, persistent}
     ] = args
 
-    open_table(ets_table_name, persistent || false)
+    open_table(ets_table_name(), persistent || false)
     :timer.send_interval(cleanup_rate, :prune)
     {:ok, %{timeout: timeout, cleanup_rate: cleanup_rate, persistent: persistent}}
   end
