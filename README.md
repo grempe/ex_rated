@@ -149,6 +149,7 @@ Basic Bench    10000000   0.89 µs/op
 - Update `ex_doc` and `ex2ms` dependencies.
 - `_` prefix unused variables to avoid compilation warnings.
 - Fix compilation warning with `ets_table_name()`
+- Added GitHub Elixir test action.
 
 ### v1.3.3
 
