@@ -9,7 +9,7 @@ defmodule BasicBench do
       ], [name: :ex_rated])
     end
 
-    after_each_bench tid do
+    after_each_bench _tid do
       ExRated.delete_bucket("my-bucket")
     end
 
