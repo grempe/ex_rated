@@ -84,6 +84,7 @@ You can also start the GenServer manually, and pass it custom config, with somet
 
 Alternatively, you can configure them in your `config/config.exs` (or
 other config) file like
+
 ```
 config :exrated,
     timeout: 10_000,
@@ -100,7 +101,7 @@ These args and their defaults are:
 `{:cleanup_rate, 60_000}` : how often, in milliseconds, the bucket pruning process will be run.
 
 `{:ets_table_name, :ex_rated_buckets}` : The atom name of the ETS
-table.  This can be configured within your `config` files but not when
+table. This can be configured within your `config` files but not when
 starting the GenServer manually.
 
 `{:persistent, false}` : Whether to persist ETS table to disk with DETS on server stop/restart.
@@ -119,24 +120,34 @@ mix test --no-start
 
 You can use the `Benchfella` library to do a quick performance test.
 
-On a 2017 Macbook Pro I can do 1,000,000 checks, averaging 2.31 µs/op.
+On a 2019 Macbook Pro (2.3 GHz 8-Core Intel Core i9, 64GB RAM) the lib can do 10,000,000 checks in less than 10s, averaging 0.89 µs/op (microseconds).
 
 ```text
 $ mix bench
+Compiling 1 file (.ex)
 Settings:
   duration:      1.0 s
 
 ## BasicBench
-[15:09:49] 1/1: Basic Bench
+[10:45:54] 1/1: Basic Bench
 
-Finished in 2.57 seconds
+Finished in 9.87 seconds
 
 ## BasicBench
 benchmark na iterations   average time
-Basic Bench     1000000   2.31 µs/op
+Basic Bench    10000000   0.89 µs/op
 ```
 
 ## Changes
+
+### v2.0.0
+
+- [BREAKING] Fixes #24 (Avoid GenServer Serialization) [@nabaskes, @benwilson512]
+  - Improves performance from 2.26 µs/op to 0.89 µs/op (same hardware)
+  - Breaking due to changed method for configuring `ets_table_name` if overriding.
+- Update `ex_doc` and `ex2ms` dependencies.
+- `_` prefix unused variables to avoid compilation warnings.
+- Fix compilation warning with `ets_table_name()`
 
 ### v1.3.3
 
