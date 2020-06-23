@@ -145,6 +145,7 @@ Basic Bench    10000000   0.89 µs/op
 - [BREAKING] Fixes #24 (Avoid GenServer Serialization) [@nabaskes, @benwilson512]
   - Improves performance from 2.26 µs/op to 0.89 µs/op (same hardware)
   - Breaking due to changed method for configuring `ets_table_name` if overriding.
+- Bucket names can be any Erlang term. Fixes #17 [@denvera]
 - Update `ex_doc` and `ex2ms` dependencies.
 - `_` prefix unused variables to avoid compilation warnings.
 - Fix compilation warning with `ets_table_name()`
