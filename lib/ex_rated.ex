@@ -187,7 +187,7 @@ defmodule ExRated do
     Map.get(state, :persistent) == true
   end
 
-  defp persist(state) do
+  defp persist(_state) do
     ets_table_name = ets_table_name()
     :ets.to_dets(ets_table_name, ets_table_name)
   end

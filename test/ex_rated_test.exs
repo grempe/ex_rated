@@ -112,7 +112,7 @@ defmodule ExRatedServerTest do
     ExRated.stop(pid)
   end
 
-  defp start_server(table, persistent) do
+  defp start_server(_table, persistent) do
     GenServer.start_link(ExRated, [
       {:timeout, 10_000},
       {:cleanup_rate,10_000},
