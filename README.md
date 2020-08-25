@@ -89,7 +89,7 @@ other config) file like
 config :exrated,
     timeout: 10_000,
 	cleanup_rate: 10_000,
-	persisent: false,
+	persistent: false,
 	name: :ex_rated,
 	ets_table_name: :ets_rated_test_buckets
 ```
