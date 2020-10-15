@@ -86,7 +86,7 @@ Alternatively, you can configure them in your `config/config.exs` (or
 other config) file like
 
 ```
-config :exrated,
+config :ex_rated,
     timeout: 10_000,
 	cleanup_rate: 10_000,
 	persistent: false,
