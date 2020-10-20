@@ -115,6 +115,7 @@ defmodule ExRated do
 
   @doc false
   def init(args) do
+    Process.flag(:trap_exit, true)
     [
       {:timeout, timeout},
       {:cleanup_rate, cleanup_rate},
