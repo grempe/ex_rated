@@ -147,7 +147,7 @@ defmodule ExRated do
   end
 
   def handle_cast(_msg, state) do
-    {:reply, state}
+    {:noreply, state}
   end
 
   def handle_info(:prune, state) do
