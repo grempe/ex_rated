@@ -25,6 +25,11 @@ defmodule ExRated do
     GenServer.start_link(__MODULE__, Keyword.merge(app_args_with_defaults(), args), opts)
   end
 
+  @doc false
+  def child_spec(args_opts) do
+    %{id: __MODULE__, start: {__MODULE__, :start_link, args_opts}}
+  end
+
 
   @doc """
   Check if the action you wish to take is within the rate limit bounds
@@ -108,6 +113,7 @@ defmodule ExRated do
 
   ## Server Callbacks
 
+  @doc false
   def init(args) do
     [
       {:timeout, timeout},

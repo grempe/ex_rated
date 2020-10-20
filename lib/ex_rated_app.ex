@@ -6,7 +6,7 @@ defmodule ExRated.App do
   def start(_type, _args) do
     children = [
       # Define workers and child supervisors to be supervised
-      %{id: ExRated, start: {ExRated, :start_link, [[], [name: :ex_rated]]}}
+      {ExRated, [[], [name: :ex_rated]]}
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
