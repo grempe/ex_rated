@@ -2,23 +2,105 @@ name: Elixir CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, dev/* ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  build:
-
+  # Refactoring duplicated yaml is currently not possible
+  # because Github does not support anchor syntax (& and *) now.
+  elixir_1_11:
     runs-on: ubuntu-latest
-
+    name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
+    strategy:
+      matrix:
+        elixir: [1.11.0]
+        otp: [21.0, 22.0, 23.0]
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup elixir
-      uses: actions/setup-elixir@v1
-      with:
-        elixir-version: '1.9.4' # Define the elixir version [required]
-        otp-version: '22.2' # Define the OTP version [required]
-    - name: Install Dependencies
-      run: mix deps.get
-    - name: Run Tests
-      run: mix test
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - run: mix deps.get
+      - run: mix test
+
+  elixir_1_10:
+    runs-on: ubuntu-latest
+    name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
+    strategy:
+      matrix:
+        elixir: [1.10.0]
+        otp: [21.0, 22.0]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - run: mix deps.get
+      - run: mix test
+
+  elixir_1_9:
+    runs-on: ubuntu-latest
+    name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
+    strategy:
+      matrix:
+        elixir: [1.9.0]
+        otp: [20.0, 21.0, 22.0]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - run: mix deps.get
+      - run: mix test
+
+  elixir_1_8:
+    runs-on: ubuntu-latest
+    name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
+    strategy:
+      matrix:
+        elixir: [1.8.0]
+        otp: [20.0, 21.0, 22.0]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - run: mix deps.get
+      - run: mix test
+
+  elixir_1_7:
+    runs-on: ubuntu-latest
+    name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
+    strategy:
+      matrix:
+        elixir: [1.7.0]
+        otp: [19.0, 20.0, 21.0, 22.0]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - run: mix deps.get
+      - run: mix test
+
+  elixir_1_6:
+    runs-on: ubuntu-latest
+    name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
+    strategy:
+      matrix:
+        elixir: [1.6.0]
+        otp: [19.0, 20.0]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - run: mix deps.get
+      - run: mix test
