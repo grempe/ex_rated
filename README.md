@@ -85,13 +85,13 @@ You can also start the GenServer manually, and pass it custom config, with somet
 Alternatively, you can configure them in your `config/config.exs` (or
 other config) file like
 
-```
+```elixir
 config :ex_rated,
-    timeout: 10_000,
-	cleanup_rate: 10_000,
-	persistent: false,
-	name: :ex_rated,
-	ets_table_name: :ets_rated_test_buckets
+  timeout: 10_000,
+  cleanup_rate: 10_000,
+  persistent: false,
+  name: :ex_rated,
+  ets_table_name: :ets_rated_test_buckets
 ```
 
 These args and their defaults are:
