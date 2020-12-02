@@ -21,11 +21,13 @@ defmodule ExRated do
   @doc """
   Starts the ExRated rate limit counter server.
   """
-  def start_link(args, opts \\ []) do
-    case args do
-      [] -> GenServer.start_link(__MODULE__, app_args_with_defaults(), opts)
-      _ -> GenServer.start_link(__MODULE__, Keyword.merge(app_args_with_defaults(), args), opts)
-    end
+  def start_link(args \\ [], opts \\ []) do
+    GenServer.start_link(__MODULE__, Keyword.merge(app_args_with_defaults(), args), opts)
+  end
+
+  @doc false
+  def child_spec(args_opts) do
+    %{id: __MODULE__, start: {__MODULE__, :start_link, args_opts}}
   end
 
 
@@ -111,7 +113,9 @@ defmodule ExRated do
 
   ## Server Callbacks
 
+  @doc false
   def init(args) do
+    Process.flag(:trap_exit, true)
     [
       {:timeout, timeout},
       {:cleanup_rate, cleanup_rate},
@@ -144,7 +148,7 @@ defmodule ExRated do
   end
 
   def handle_cast(_msg, state) do
-    {:reply, state}
+    {:noreply, state}
   end
 
   def handle_info(:prune, state) do
