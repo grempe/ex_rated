@@ -140,6 +140,13 @@ Basic Bench    10000000   0.89 µs/op
 
 ## Changes
 
+### v2.0.1
+
+- Add matrix tests for Elixir/OTP versions for Elixir >= 1.6. [@jechol]
+- Remove deprecated `Supervisor.Spec.worker` usage. [@jechol]
+- Remove `init/1` from generated docs. [@jechol]
+- Update config example in README.md
+
 ### v2.0.0
 
 - [BREAKING] Fixes #24 (Avoid GenServer Serialization) [@nabaskes, @benwilson512]
