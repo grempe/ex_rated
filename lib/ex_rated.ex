@@ -3,10 +3,8 @@ defmodule ExRated do
 
   @moduledoc """
     An Elixir OTP GenServer that provides the ability to manage rate limiting
-    for any process that needs it.  This rate limiter is based on the
-    concept of a 'token bucket'.  You can read more here:
-
-      http://en.wikipedia.org/wiki/Token_bucket
+    for any process that needs it. This rate limiter is based on the concept 
+    of a 'token bucket' (http://en.wikipedia.org/wiki/Token_bucket).
 
     This application started as a direct port of the Erlang 'raterlimiter' project
     created by Alexander Sorokin (https://github.com/Gromina/raterlimiter,
