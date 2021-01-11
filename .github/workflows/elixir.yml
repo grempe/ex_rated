@@ -22,6 +22,7 @@ jobs:
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
+          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -38,6 +39,7 @@ jobs:
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
+          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -54,6 +56,7 @@ jobs:
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
+          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -70,6 +73,7 @@ jobs:
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
+          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -86,6 +90,7 @@ jobs:
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
+          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -102,6 +107,6 @@ jobs:
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
+          experimental-otp: true
       - run: mix deps.get
       - run: mix test
-      
