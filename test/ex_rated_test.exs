@@ -55,7 +55,7 @@ defmodule ExRatedServerTest do
     assert {2, 0, _, _, _} = ExRated.inspect_bucket("my-bucket1", 1000, 2)
     assert {:error, 2} = ExRated.check_rate("my-bucket1", 1000, 2)
     assert {3, 0, ms_to_next_bucket, _, _} = ExRated.inspect_bucket("my-bucket1", 1000, 2)
-    assert ms_to_next_bucket < 1000
+    assert ms_to_next_bucket <= 1000
   end
 
   test "returns expected tuples on delete_bucket" do
