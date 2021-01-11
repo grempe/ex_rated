@@ -14,8 +14,8 @@ jobs:
     name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
     strategy:
       matrix:
-        elixir: [1.11.0]
-        otp: [21.0, 22.0, 23.0]
+        elixir: ['1.11.0']
+        otp: ['21.0', '22.0', '23.0']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
@@ -30,8 +30,8 @@ jobs:
     name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
     strategy:
       matrix:
-        elixir: [1.10.0]
-        otp: [21.0, 22.0]
+        elixir: ['1.10.0']
+        otp: ['21.0', '22.0']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
@@ -46,8 +46,8 @@ jobs:
     name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
     strategy:
       matrix:
-        elixir: [1.9.0]
-        otp: [20.0, 21.0, 22.0]
+        elixir: ['1.9.0']
+        otp: ['20.0', '21.0', '22.0']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
@@ -62,8 +62,8 @@ jobs:
     name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
     strategy:
       matrix:
-        elixir: [1.8.0]
-        otp: [20.0, 21.0, 22.0]
+        elixir: ['1.8.0']
+        otp: ['20.0', '21.0', '22.0']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
@@ -78,8 +78,8 @@ jobs:
     name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
     strategy:
       matrix:
-        elixir: [1.7.0]
-        otp: [19.0, 20.0, 21.0, 22.0]
+        elixir: ['1.7.0']
+        otp: ['19.0', '20.0', '21.0', '22.0']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
@@ -94,8 +94,8 @@ jobs:
     name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
     strategy:
       matrix:
-        elixir: [1.6.0]
-        otp: [19.0, 20.0]
+        elixir: ['1.6.0']
+        otp: ['19.0', '20.0']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
@@ -104,3 +104,4 @@ jobs:
           otp-version: ${{matrix.otp}}
       - run: mix deps.get
       - run: mix test
+      
