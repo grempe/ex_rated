@@ -140,6 +140,12 @@ Basic Bench    10000000   0.89 µs/op
 
 ## Changes
 
+### v2.1.0
+
+- Fix compilation issues with latest Elixir
+- Update dependencies
+- Update test targets, dropping 1.6
+
 ### v2.0.1
 
 - Add matrix tests for Elixir/OTP versions for Elixir >= 1.6. [@jechol]
