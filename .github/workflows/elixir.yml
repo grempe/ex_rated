@@ -9,6 +9,40 @@ on:
 jobs:
   # Refactoring duplicated yaml is currently not possible
   # because Github does not support anchor syntax (& and *) now.
+  elixir_1_13:
+    runs-on: ubuntu-latest
+    name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
+    strategy:
+      matrix:
+        elixir: ['1.13.0']
+        otp: ['21.0', '22.0', '23.0']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+          experimental-otp: true
+      - run: mix deps.get
+      - run: mix test
+
+  elixir_1_12:
+    runs-on: ubuntu-latest
+    name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
+    strategy:
+      matrix:
+        elixir: ['1.12.0']
+        otp: ['21.0', '22.0', '23.0']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-elixir@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+          experimental-otp: true
+      - run: mix deps.get
+      - run: mix test
+
   elixir_1_11:
     runs-on: ubuntu-latest
     name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
@@ -84,23 +118,6 @@ jobs:
       matrix:
         elixir: ['1.7.0']
         otp: ['20.0', '21.0', '22.0']
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1
-        with:
-          elixir-version: ${{matrix.elixir}}
-          otp-version: ${{matrix.otp}}
-          experimental-otp: true
-      - run: mix deps.get
-      - run: mix test
-
-  elixir_1_6:
-    runs-on: ubuntu-latest
-    name: Test on Elixir ${{matrix.elixir}} / OTP ${{matrix.otp}}
-    strategy:
-      matrix:
-        elixir: ['1.6.0']
-        otp: ['20.0']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1
