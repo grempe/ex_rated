@@ -18,11 +18,10 @@ jobs:
         otp: ['22.0', '23.0', '24.0']
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1
+      - uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
-          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -35,11 +34,10 @@ jobs:
         otp: ['22.0', '23.0']
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1
+      - uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
-          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -52,11 +50,10 @@ jobs:
         otp: ['21.0', '22.0', '23.0']
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1
+      - uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
-          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -69,11 +66,10 @@ jobs:
         otp: ['21.0', '22.0']
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1
+      - uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
-          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -86,11 +82,10 @@ jobs:
         otp: ['20.0', '21.0', '22.0']
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1
+      - uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
-          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -103,11 +98,10 @@ jobs:
         otp: ['20.0', '21.0', '22.0']
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1
+      - uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
-          experimental-otp: true
       - run: mix deps.get
       - run: mix test
 
@@ -120,10 +114,9 @@ jobs:
         otp: ['20.0', '21.0', '22.0']
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1
+      - uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{matrix.elixir}}
           otp-version: ${{matrix.otp}}
-          experimental-otp: true
       - run: mix deps.get
       - run: mix test
