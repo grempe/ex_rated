@@ -41,7 +41,7 @@ iex> ExRated.inspect_bucket("my-rate-limited-api", 10_000, 5)
 {1, 4, 723, 1450282268397, 1450282268397}
 ```
 
-The `ExRated.inspect_bucket` function will return a `{count, count_remaining, ms_to_next_bucket, created_at, updated_at}` tuple, count and count_remaining are integers, ms_to_next_bucket is the number of milliseconds before the bucket resets, created_at and updated_at are timestamps in millseconds.
+The `ExRated.inspect_bucket` function will return a `{count, count_remaining, ms_to_next_bucket, created_at, updated_at}` tuple, count and count_remaining are integers, ms_to_next_bucket is the number of milliseconds before the bucket resets, created_at and updated_at are timestamps in milliseconds.
 
 Call the ExRated application with `ExRated.delete_bucket/1`. This function takes one argument:
 
