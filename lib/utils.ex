@@ -12,11 +12,12 @@ defmodule ExRated.Utils do
   def get_otp_release do
     case Process.get(:current_otp_release) do
       nil ->
-        case ("#{:erlang.system_info(:otp_release)}" |> Integer.parse) do
+        case "#{:erlang.system_info(:otp_release)}" |> Integer.parse() do
           {ver, _} when is_integer(ver) ->
             Process.put(:current_otp_release, ver)
             ver
         end
+
       ver ->
         ver
     end
