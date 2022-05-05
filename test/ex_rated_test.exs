@@ -2,16 +2,15 @@ defmodule ExRatedServerTest do
   use ExUnit.Case, async: true
 
   setup context do
-
     table = Application.get_env(:ex_rated, :ets_table_name, :ex_rated_buckets)
 
     {:ok, pid} = start_server(table, context[:persistent] || false)
 
-    on_exit fn ->
+    on_exit(fn ->
       if context[:persistent] do
         File.rm(table |> to_string)
       end
-    end
+    end)
 
     {:ok, exrated_server: pid, exrated_table: table}
   end
@@ -40,7 +39,7 @@ defmodule ExRatedServerTest do
     assert {:ok, 1} = ExRated.check_rate("my-bucket", 1000, 2)
     assert {:ok, 2} = ExRated.check_rate("my-bucket", 1000, 2)
     assert {:error, 2} = ExRated.check_rate("my-bucket", 1000, 2)
-    :timer.sleep 1000
+    :timer.sleep(1000)
     assert {:ok, 1} = ExRated.check_rate("my-bucket", 1000, 2)
     assert {:ok, 2} = ExRated.check_rate("my-bucket", 1000, 2)
     assert {:error, 2} = ExRated.check_rate("my-bucket", 1000, 2)
@@ -76,7 +75,6 @@ defmodule ExRatedServerTest do
     assert {:error, 0} = ExRated.check_rate("zero-bucket", 1000, 0)
   end
 
-
   @tag persistent: false
   test "data is not persisted on server stop", context do
     assert {:ok, 1} = ExRated.check_rate("my-bucket", 10_000, 10)
@@ -105,7 +103,7 @@ defmodule ExRatedServerTest do
 
     # assert it reloads the data from disk
     # remove key #2 in data before comparison: it is a timestamp and it's never the same
-    volatile   = data |> Tuple.delete_at(2)
+    volatile = data |> Tuple.delete_at(2)
     persistent = ExRated.inspect_bucket("my-bucket", 10_000, 10) |> Tuple.delete_at(2)
 
     assert volatile == persistent
@@ -113,12 +111,12 @@ defmodule ExRatedServerTest do
 
   test "bucket names can be any()" do
     Enum.each([true, nil, :atom, %{map: :type}, self(), {:a, 5, "x"}, 0.1, 5, ["a", "b"]], fn e ->
-      assert {:ok, 1} = ExRated.check_rate(e, 10000, 10)
+      assert {:ok, 1} = ExRated.check_rate(e, 10_000, 10)
     end)
   end
 
   defp start_server(_table, persistent) do
-    args = [{:timeout, 10_000}, {:cleanup_rate,10_000}, {:persistent, persistent}]
+    args = [{:timeout, 10_000}, {:cleanup_rate, 10_000}, {:persistent, persistent}]
     opts = [name: :ex_rated]
     {:ok, _child} = ExUnit.Callbacks.start_supervised({ExRated, [args, opts]})
   end

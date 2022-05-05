@@ -24,6 +24,8 @@ jobs:
           otp-version: ${{matrix.otp}}
       - run: mix deps.get
       - run: mix test
+      - run: mix format --check-formatted
+      - run: mix credo --strict
 
   elixir_1_12:
     runs-on: ubuntu-latest

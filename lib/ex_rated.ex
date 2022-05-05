@@ -3,7 +3,7 @@ defmodule ExRated do
 
   @moduledoc """
     An Elixir OTP GenServer that provides the ability to manage rate limiting
-    for any process that needs it. This rate limiter is based on the concept 
+    for any process that needs it. This rate limiter is based on the concept
     of a 'token bucket' (http://en.wikipedia.org/wiki/Token_bucket).
 
     This application started as a direct port of the Erlang 'raterlimiter' project
@@ -28,7 +28,6 @@ defmodule ExRated do
     %{id: __MODULE__, start: {__MODULE__, :start_link, args_opts}}
   end
 
-
   @doc """
   Check if the action you wish to take is within the rate limit bounds
   and increment the buckets counter by 1 and its updated_at timestamp.
@@ -46,7 +45,8 @@ defmodule ExRated do
       {:ok, 1}
 
   """
-  @spec check_rate(id::any, scale::integer, limit::integer) :: {:ok, count::integer} | {:error, limit::integer}
+  @spec check_rate(id :: any, scale :: integer, limit :: integer) ::
+          {:ok, count :: integer} | {:error, limit :: integer}
   def check_rate(id, scale, limit) do
     ets_table_name = ets_table_name()
     count_hit(id, scale, limit, ets_table_name)
@@ -73,11 +73,9 @@ defmodule ExRated do
       {1, 2499, 29381612, 1450281014468, 1450281014468}
 
   """
-  @spec inspect_bucket(id::any, scale::integer, limit::integer) :: {count::integer,
-                                                                         count_remaining::integer,
-                                                                         ms_to_next_bucket::integer,
-                                                                         created_at :: integer | nil,
-                                                                         updated_at :: integer | nil}
+  @spec inspect_bucket(id :: any, scale :: integer, limit :: integer) ::
+          {count :: integer, count_remaining :: integer, ms_to_next_bucket :: integer,
+           created_at :: integer | nil, updated_at :: integer | nil}
   def inspect_bucket(id, scale, limit) do
     GenServer.call(:ex_rated, {:inspect_bucket, id, scale, limit})
   end
@@ -97,7 +95,7 @@ defmodule ExRated do
       :ok
 
   """
-  @spec delete_bucket(id::String.t) :: :ok | :error
+  @spec delete_bucket(id :: String.t()) :: :ok | :error
   def delete_bucket(id) do
     GenServer.call(:ex_rated, {:delete_bucket, id})
   end
@@ -114,6 +112,7 @@ defmodule ExRated do
   @doc false
   def init(args) do
     Process.flag(:trap_exit, true)
+
     [
       {:timeout, timeout},
       {:cleanup_rate, cleanup_rate},
@@ -171,11 +170,16 @@ defmodule ExRated do
     {:ok, state}
   end
 
-
   ## Private Functions
 
   defp open_table(ets_table_name, false) do
-    :ets.new(ets_table_name, [:named_table, :ordered_set, :public, read_concurrency: true, write_concurrency: true])
+    :ets.new(ets_table_name, [
+      :named_table,
+      :ordered_set,
+      :public,
+      read_concurrency: true,
+      write_concurrency: true
+    ])
   end
 
   defp open_table(ets_table_name, true) do
@@ -210,11 +214,13 @@ defmodule ExRated do
         # The first element of the four element Tuple becomes the key.
         true = :ets.insert(ets_table_name, {key, 1, stamp, stamp})
         {:ok, 1}
+
       true ->
         # Increment counter by 1, increment created_at by 0 (no-op), and updated_at to current timestamp
-        [counter, _, _] = :ets.update_counter(ets_table_name, key, [{2,1},{3,0},{4,1,0, stamp}])
+        [counter, _, _] =
+          :ets.update_counter(ets_table_name, key, [{2, 1}, {3, 0}, {4, 1, 0, stamp}])
 
-        if (counter > limit) do
+        if counter > limit do
           {:error, limit}
         else
           {:ok, counter}
@@ -224,11 +230,12 @@ defmodule ExRated do
 
   defp inspect_bucket(id, scale, limit, ets_table_name) do
     {stamp, key} = stamp_key(id, scale)
-    ms_to_next_bucket = (elem(key, 0) * scale) + scale - stamp
+    ms_to_next_bucket = elem(key, 0) * scale + scale - stamp
 
     case :ets.member(ets_table_name, key) do
       false ->
         {0, limit, ms_to_next_bucket, nil, nil}
+
       true ->
         [{_, count, created_at, updated_at}] = :ets.lookup(ets_table_name, key)
         count_remaining = if limit > count, do: limit - count, else: 0
@@ -238,16 +245,23 @@ defmodule ExRated do
 
   defp delete_bucket(id, ets_table_name) do
     import Ex2ms
-    case :ets.select_delete(ets_table_name, fun do {{bucket_number, bid},_,_,_} when bid == ^id -> true end) do
+
+    case :ets.select_delete(
+           ets_table_name,
+           fun do
+             {{bucket_number, bid}, _, _, _} when bid == ^id -> true
+           end
+         ) do
       1 -> :ok
       _ -> :error
     end
   end
 
   defp stamp_key(id, scale) do
-    stamp         = timestamp()
-    bucket_number = trunc(stamp/scale)      # with scale = 1 bucket changes every millisecond
-    key           = {bucket_number, id}
+    stamp = timestamp()
+    # with scale = 1 bucket changes every millisecond
+    bucket_number = trunc(stamp / scale)
+    key = {bucket_number, id}
     {stamp, key}
   end
 
@@ -259,32 +273,39 @@ defmodule ExRated do
     # See : http://www.erlang.org/doc/man/ms_transform.html
     import Ex2ms
     now_stamp = timestamp()
-    :ets.select_delete(ets_table_name, fun do {_,_,_,updated_at} when updated_at < (^now_stamp - ^timeout) -> true end)
+
+    :ets.select_delete(
+      ets_table_name,
+      fun do
+        {_, _, _, updated_at} when updated_at < ^now_stamp - ^timeout -> true
+      end
+    )
   end
 
   # Returns Erlang Time as milliseconds since 00:00 GMT, January 1, 1970
-  defp timestamp()
-    case ExRated.Utils.get_otp_release() do
-      ver when ver >= 18 ->
-        defp timestamp(), do: :erlang.system_time(:milli_seconds)
-      _ ->
-        defp timestamp() do
-          {mega, sec, micro} = :erlang.now()
-          1000 * (mega * 1000000 + sec) + round(micro/1000)
-        end
-    end
+  defp timestamp
 
-  defp ets_table_name() do
+  case ExRated.Utils.get_otp_release() do
+    ver when ver >= 18 ->
+      defp timestamp, do: :erlang.system_time(:milli_seconds)
+
+    _ ->
+      defp timestamp do
+        {mega, sec, micro} = :erlang.now()
+        1000 * (mega * 1_000_000 + sec) + round(micro / 1000)
+      end
+  end
+
+  defp ets_table_name do
     Application.get_env(:ex_rated, :ets_table_name) || :ex_rated_buckets
   end
 
   # Fetch configured args
-  defp app_args_with_defaults() do
+  defp app_args_with_defaults do
     [
       timeout: Application.get_env(:ex_rated, :timeout) || 90_000_000,
       cleanup_rate: Application.get_env(:ex_rated, :cleanup_rate) || 60_000,
       persistent: Application.get_env(:ex_rated, :persistent) || false
     ]
   end
-
 end
