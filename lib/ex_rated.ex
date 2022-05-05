@@ -3,7 +3,7 @@ defmodule ExRated do
 
   @moduledoc """
     An Elixir OTP GenServer that provides the ability to manage rate limiting
-    for any process that needs it. This rate limiter is based on the concept 
+    for any process that needs it. This rate limiter is based on the concept
     of a 'token bucket' (http://en.wikipedia.org/wiki/Token_bucket).
 
     This application started as a direct port of the Erlang 'raterlimiter' project
@@ -283,25 +283,25 @@ defmodule ExRated do
   end
 
   # Returns Erlang Time as milliseconds since 00:00 GMT, January 1, 1970
-  defp timestamp()
+  defp timestamp
 
   case ExRated.Utils.get_otp_release() do
     ver when ver >= 18 ->
-      defp timestamp(), do: :erlang.system_time(:milli_seconds)
+      defp timestamp, do: :erlang.system_time(:milli_seconds)
 
     _ ->
-      defp timestamp() do
+      defp timestamp do
         {mega, sec, micro} = :erlang.now()
         1000 * (mega * 1_000_000 + sec) + round(micro / 1000)
       end
   end
 
-  defp ets_table_name() do
+  defp ets_table_name do
     Application.get_env(:ex_rated, :ets_table_name) || :ex_rated_buckets
   end
 
   # Fetch configured args
-  defp app_args_with_defaults() do
+  defp app_args_with_defaults do
     [
       timeout: Application.get_env(:ex_rated, :timeout) || 90_000_000,
       cleanup_rate: Application.get_env(:ex_rated, :cleanup_rate) || 60_000,

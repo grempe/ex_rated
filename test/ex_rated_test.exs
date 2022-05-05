@@ -111,7 +111,7 @@ defmodule ExRatedServerTest do
 
   test "bucket names can be any()" do
     Enum.each([true, nil, :atom, %{map: :type}, self(), {:a, 5, "x"}, 0.1, 5, ["a", "b"]], fn e ->
-      assert {:ok, 1} = ExRated.check_rate(e, 10000, 10)
+      assert {:ok, 1} = ExRated.check_rate(e, 10_000, 10)
     end)
   end
 
