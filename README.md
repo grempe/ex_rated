@@ -108,6 +108,15 @@ starting the GenServer manually.
 
 `[name: :ex_rated]` : The registered name of the ExRated GenServer.
 
+## Contributing
+
+Please run the following commands before pushing a pull request to ensure your code has been properly formatted and static analysis run.
+
+```sh
+mix format
+mix credo --strict
+```
+
 ## Testing
 
 It is important that the OTP doesn't get automatically started by Mix.
