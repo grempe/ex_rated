@@ -81,6 +81,27 @@ defmodule ExRated do
   end
 
   @doc """
+  Decrease the amount remaining in the current bucket. If the number remaining is already
+  less than new_remaining, do nothing.
+
+  ## Arguments:
+
+  - `id` (Erlang term()) name of the bucket
+  - `scale` (Integer) of time the bucket you want to inspect was created with.
+  - `limit` (Integer) representing the max counter size the bucket was created with.
+  - `new_remaining` (Integer) the new value for remaining, will replace current remaining iff it is less.
+  """
+  @spec decrease_remaining_to(
+          id :: any,
+          scale :: integer,
+          limit :: integer,
+          new_remaining :: integer
+        ) :: :ok
+  def decrease_remaining_to(id, scale, limit, new_remaining) do
+    GenServer.cast(:ex_rated, {:decrease_remaining_to, id, scale, limit, new_remaining})
+  end
+
+  @doc """
   Delete bucket to reset the counter.
 
   ## Arguments:
@@ -142,6 +163,12 @@ defmodule ExRated do
 
   def handle_call(_msg, _from, state) do
     {:reply, :ok, state}
+  end
+
+  def handle_cast({:decrease_remaining_to, id, scale, limit, new_remaining}, state) do
+    ets_table_name = ets_table_name()
+    decrease_reamaining_to(id, scale, limit, new_remaining, ets_table_name)
+    {:noreply, state}
   end
 
   def handle_cast(_msg, state) do
@@ -254,6 +281,31 @@ defmodule ExRated do
          ) do
       1 -> :ok
       _ -> :error
+    end
+  end
+
+  defp decrease_reamaining_to(id, scale, limit, new_remaining, ets_table_name) do
+    {stamp, key} = stamp_key(id, scale)
+    new_count = limit - new_remaining
+
+    if 0 <= new_count and new_count <= limit do
+      case :ets.member(ets_table_name, key) do
+        false ->
+          # Insert Key {bucket_number, id} with counter (1), created_at (timestamp), updated_at (timestamp)
+          # The first element of the four element Tuple becomes the key.
+          true = :ets.insert(ets_table_name, {key, new_count, stamp, stamp})
+
+        true ->
+          import Ex2ms
+
+          :ets.select_replace(
+            ets_table_name,
+            fun do
+              {^key, count, created_at, _} when count < ^new_count ->
+                {^key, ^new_count, created_at, ^stamp}
+            end
+          )
+      end
     end
   end
 

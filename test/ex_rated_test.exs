@@ -115,6 +115,29 @@ defmodule ExRatedServerTest do
     end)
   end
 
+  describe "decrease_remaining_to/4" do
+    test "decreases count on new bucket" do
+      assert {0, 10, _, nil, nil} = ExRated.inspect_bucket("my-bucket1", 1000, 10)
+      assert :ok == ExRated.decrease_remaining_to("my-bucket1", 1000, 10, 2)
+      assert {8, 2, _, _, _} = ExRated.inspect_bucket("my-bucket1", 1000, 10)
+    end
+
+    test "decreases count on existing bucket" do
+      assert {:ok, 1} = ExRated.check_rate("my-bucket1", 1000, 10)
+      assert :ok == ExRated.decrease_remaining_to("my-bucket1", 1000, 10, 2)
+      assert {8, 2, _, _, _} = ExRated.inspect_bucket("my-bucket1", 1000, 10)
+    end
+
+    test "if it is already below value, it leaves it unchanged" do
+      assert {0, 10, _, nil, nil} = ExRated.inspect_bucket("my-bucket1", 1000, 10)
+      assert {:ok, 1} = ExRated.check_rate("my-bucket1", 1000, 10)
+      assert {:ok, 2} = ExRated.check_rate("my-bucket1", 1000, 10)
+      assert {:ok, 3} = ExRated.check_rate("my-bucket1", 1000, 10)
+      assert :ok == ExRated.decrease_remaining_to("my-bucket1", 1000, 10, 9)
+      assert {3, 7, _, _, _} = ExRated.inspect_bucket("my-bucket1", 1000, 10)
+    end
+  end
+
   defp start_server(_table, persistent) do
     args = [{:timeout, 10_000}, {:cleanup_rate, 10_000}, {:persistent, persistent}]
     opts = [name: :ex_rated]
